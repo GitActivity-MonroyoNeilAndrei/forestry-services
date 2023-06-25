@@ -89,12 +89,12 @@
                 while ($row = $result->fetch_assoc()) {
                   echo "
                     <tr>
-                      <td>$row[registration_number]</td>
+                      <td>$row[registration_number]$row[registration_id]</td>
                       <td>$row[name]</td>
                       <td>$row[address]</td>
                       <td>$row[purpose]</td>
-                      <td><a href='view-document.php?url=$row[chainsaw_receipt]&path=updating-of-application-form'><img src='../uploads/$row[chainsaw_receipt]' style='width: 60px;'></a></td>
-                      <td><a href='view-document.php?url=$row[mayors_permit]&path=updating-of-application-form'><img src='../uploads/$row[mayors_permit]' style='width: 60px;'></a></td>
+                      <td><a type='button' class='btn btn-success' href='view-document.php?url=$row[chainsaw_receipt]&path=updating-of-application-form'>View</a></td>
+                      <td><a type='button' class='btn btn-success' href='view-document.php?url=$row[mayors_permit]&path=updating-of-application-form'>View</a></td>
                       <td>$row[brand]</td>
                       <td>$row[model]</td>
                       <td>$row[serial_no]</td>

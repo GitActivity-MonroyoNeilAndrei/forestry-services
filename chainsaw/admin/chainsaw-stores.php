@@ -89,7 +89,7 @@
             <td>$row[address]</td>
             <td>$row[date_issued]</td>
             <td>$row[expiration_date]</td>
-            <td><a href='view-document.php?url=$row[certificate]&path=chainsaw-stores'><img style='width: 60px' src='../uploads/$row[certificate]' alt='img'></a></td>
+            <td><a type='button' class='btn btn-success' href='view-document.php?url=$row[certificate]&path=chainsaw-stores'>View</a></td>
             <td>
               <a class='btn btn-primary btn-sm' href='edit-chainsaw-store.php?id=$row[chainsaw_store_id]'>Edit</a>
 

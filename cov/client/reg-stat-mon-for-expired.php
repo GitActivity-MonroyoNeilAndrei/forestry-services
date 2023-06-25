@@ -83,14 +83,33 @@ if (!isset($_SESSION['username'])) {
             </tr>
           </thead>
           <tbody>
-            <tr>
-              <td>MR-MRQ-01-2023(RENEWAL)</td>
-              <td>April 23, 2023</td>
-              <td>Chris Neil Mendeja</td>
-              <td>September 16, 2024</td>
-              <td>Upload</td>
-              <td>Action</td>
-            </tr>
+          <?php
+                if ($conn->connect_error) {
+                  die("Connection failed: " . $conn->connect_error);
+                }
+
+                $select = "SELECT * FROM cov_registrations WHERE cov_client_id = " . $_SESSION['client_id'] . " AND status = 'for-expired' ORDER BY date_and_time_submitted DESC";
+                $result = $conn->query($select);
+
+                if (!$result) {
+                  die("Invalid query: " . $conn->error);
+                }
+
+                while ($row = $result->fetch_assoc()) {
+                  echo "
+                  <tr>
+                    <td>$row[permit_number]</td>
+                    <td class='px-3'>$row[date_and_time_released]</td>
+                    <td class='px-3'>$row[released_by]</td>
+                    <td class='px-3'>$row[validity_date]</td>
+                    <td class='px-3'><a class='btn btn-success' href='view-pdf-file.php?doc=$row[documents]' target='_blank'>View</a></td>
+                    <td>
+                    <a class='btn btn-primary btn-sm' href='view-submitted-application.php?id=$row[ptpr_registration_id]&status=expired'>View</a>
+                    </td>
+                  </tr>
+                ";
+                }
+                ?>
           </tbody>
             </table>
           </div>

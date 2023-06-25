@@ -86,42 +86,37 @@ if (!isset($_SESSION['username'])) {
                 </tr>
               </thead>
               <tbody>
-                <tr>
-                  <td>President</td>
-                  <td>Anton</td>
-                  <td>Hill</td>
-                  <td>1st</td>
-                  <td>img</td>
-                  <td>meta</td>
-                  <td>23</td>
-                  <td>23</td>
-                  <td>23</td>
-                  <td>23</td>
-                </tr>
-                <tr>
-                  <td>President</td>
-                  <td>Bill</td>
-                  <td>Miles</td>
-                  <td>1st</td>
-                  <td>img</td>
-                  <td>Apple</td>
-                  <td>111</td>
-                  <td>23</td>
-                  <td>23</td>
-                  <td>23</td>
-                </tr>
-                <tr>
-                  <td>Vice President</td>
-                  <td>Anton</td>
-                  <td>Hill</td>
-                  <td>1st</td>
-                  <td>img</td>
-                  <td>meta</td>
-                  <td>23</td>
-                  <td>23</td>
-                  <td>23</td>
-                  <td>23</td>
-                </tr>
+              <?php
+                if ($conn->connect_error) {
+                  die("Connection failed: " . $conn->connect_error);
+                }
+
+                $select = "SELECT * FROM cov_registrations WHERE cov_client_id = " . $_SESSION['client_id'] . " AND status = 'for-released' ORDER BY date_and_time_submitted DESC";
+                $result = $conn->query($select);
+
+                if (!$result) {
+                  die("Invalid query: " . $conn->error);
+                }
+
+                while ($row = $result->fetch_assoc()) {
+                  echo "
+                  <tr>
+                    <td>$row[permit_number]</td>
+                    <td class='px-3'>$row[date_and_time_submitted]</td>
+                    <td class='px-3'>$_SESSION[username]</td>
+                    <td class='px-3'>$row[date_and_time_released]</td>
+                    <td class='px-3'>$row[released_by]</td>
+                    <td class='px-3'>$row[validity_date]</td>
+                    <td class='px-3'>$row[date_and_time_accepted]</td>
+                    <td class='px-3'>$row[accepted_by]</td>
+                    <td class='px-3'><a class='btn btn-success' href='view-pdf-file.php?doc=$row[documents]' target='_blank'>View</a></td>
+                    <td>
+                    <a class='btn btn-primary btn-sm' href='view-submitted-application.php?id=$row[ptpr_registration_id]&status=submitted'>View</a>
+                    </td>
+                  </tr>
+                ";
+                }
+                ?>
               </tbody>
             </table>
           </div>

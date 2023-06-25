@@ -73,8 +73,8 @@ if(!isset($_SESSION['username'])){
               <td><?php echo status_count($conn, "for-submitted") ?></td>
               <td><?php echo status_count($conn, "rejected") ?></td>
               <td><?php echo status_count($conn, "accepted") ?></td>
-              <td><?php echo status_count($conn, "") ?></td>
-              <td><?php echo status_count($conn, "") ?></td>
+              <td><?php echo status_count($conn, "for-released") ?></td>
+              <td><?php echo status_count($conn, "for-expired") ?></td>
             </tr>
             <tr>
               <td><a class="btn btn-success" href="reg-stat-mon-for-draft.php">View</a></td>

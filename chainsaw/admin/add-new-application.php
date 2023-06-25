@@ -31,12 +31,12 @@ if(isset($_POST['submit'])){
   $date_and_time_submitted = date('Y-m-d H:i:s');
 
 
-  $select = "SELECT * FROM registrations WHERE name = '$name' && brand = '$brand' && status = '$status'";
-  $check = $conn->query($select);
+//   $select = "SELECT * FROM registrations WHERE name = '$name' && brand = '$brand' && status = '$status'";
+//   $check = $conn->query($select);
 
+// mysqli_num_rows($check) > 0
 
-
-  if(mysqli_num_rows($check) > 0){
+  if(false){
     // if there is a data retrieve, display an error prompting the user that this email and password already exist
     $error = 'chainsaw already registered!';
     //get the clientID
@@ -82,7 +82,8 @@ if(isset($_POST['submit'])){
           $result = $conn->query($insert);
 
           
-          header("location: list-of-applications.php");
+          // header("location: list-of-applications.php");
+          header("location: add-new-application.php");
           exit();
           
 
@@ -127,7 +128,6 @@ if(isset($_POST['submit'])){
         <div class="content-container">
           <div class="content-header d-flex justify-content-between align-items-center">
             <h4 style="display: inline;">Chainsaw > <span class="fs-5">Application for New Registration</span></h4>
-            <button class="btn btn-danger" onclick="history.back();">Back</button>
           </div>
         <form class="row" method="post" enctype="multipart/form-data">
         <?php
@@ -217,6 +217,8 @@ if(isset($_POST['submit'])){
             </div>
             <div class="text-center mt-4">
               <input class="btn btn-success mx-2" type="submit" name="submit" value="Submit">
+            <button class="btn btn-danger" onclick="history.back();">Back</button>
+
             </div>
           </div>
         </form>

@@ -112,7 +112,7 @@ if (isset($_GET['id'])) {
       <p><span style="visibility: hidden;">wwwww</span>Be informed that I, <?php echo $name; ?> is a holder of Private Land Timber Permit from the DENR PENRO Marinduque bearing control Number PLTP No. 2022-2021 to cut/utilize manufacture <?php echo $number_of_trees; ?> <?php echo $species; ?> trees located at <?php echo $location_from; ?>. That I am transporting the following forest products gathered from <?php echo $location_from; ?> described as follows, to wit:</p>
 
       <p style="line-height: 0;">1. Kind, species, quantity & vol. of forest products: <u><?php echo $species; ?> <?php echo $number_of_trees; ?>. <?php echo $gross_volume; ?>;</u></p>
-      <p style="line-height: 0;">2. Conveyance: <u>Giga Wing Van Truck OR no. <?php echo $or_number; ?> Plate No: <?php echo $plate_number; ?>;</u></p>
+      <p style="line-height: 0;">2. Conveyance: <u>OR no. <?php echo $or_number; ?> Plate No: <?php echo $plate_number; ?>;</u></p>
       <p style="line-height: 0;">3. Driver: <u><?php echo $drivers_name; ?></u></p>
       <p style="line-height: 0;">4. Consignee/Destination <u><?php echo $location_to; ?></u></p>
       <h4 style="line-height: 0; text-align: right; padding-right: 30px;"><u><?php echo $name; ?></u></h4>

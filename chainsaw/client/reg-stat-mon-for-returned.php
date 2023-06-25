@@ -84,7 +84,7 @@ if(!isset($_SESSION['username'])){
                 die("Connection failed: ". $conn->connect_error);
               }
 
-              $select = "SELECT * FROM registrations WHERE client_id = ".$_SESSION['client_id']." AND status = 'rejected'";
+              $select = "SELECT * FROM registrations WHERE client_id = ".$_SESSION['client_id']." AND status = 'rejected' ORDER BY date_and_time_submitted DESC";
               $result = $conn->query($select);
 
               if(!$result){

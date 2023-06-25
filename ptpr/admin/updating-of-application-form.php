@@ -102,8 +102,8 @@
                       <td>$row[name]</td>
                       <td>$row[address]</td>
                       <td>$row[purpose]</td>
-                      <td><a href='view-document.php?url=$row[tax_declaration]&path=updating-of-application-form'><img src='../uploads/$row[tax_declaration]' style='width: 60px;'></a></td>
-                      <td><a href='view-document.php?url=$row[special_power_of_attorney]&path=updating-of-application-form'><img src='../uploads/$row[special_power_of_attorney]' style='width: 60px;'></a></td>
+                      <td><a type='button' class='btn btn-success' href='view-document.php?url=$row[tax_declaration]&path=updating-of-application-form'>View</a></td>
+                      <td><a type='button' class='btn btn-success' href='view-document.php?url=$row[special_power_of_attorney]&path=updating-of-application-form'>View</a></td>
                       <td>$row[tax_declaration_number]</td>
                       <td>$row[barangay]</td>
                       <td>$row[municipality]</td>

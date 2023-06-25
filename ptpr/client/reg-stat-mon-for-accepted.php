@@ -83,7 +83,7 @@ if (!isset($_SESSION['username'])) {
                   die("Connection failed: " . $conn->connect_error);
                 }
 
-                $select = "SELECT * FROM ptpr_registrations WHERE ptpr_client_id = " . $_SESSION['client_id'] . " AND status = 'accepted'";
+                $select = "SELECT * FROM ptpr_registrations WHERE ptpr_client_id = " . $_SESSION['client_id'] . " AND status = 'accepted' ORDER BY date_and_time_submitted DESC";
                 $result = $conn->query($select);
 
                 if (!$result) {

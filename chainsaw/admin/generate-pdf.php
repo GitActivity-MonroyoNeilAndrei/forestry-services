@@ -33,8 +33,8 @@
     }else{
 
     while($row = $result->fetch_assoc()){
-      
-      $registration_no = $row['registration_number'];
+
+      $permit_no = "No. MR-MRQ-" . $row['registration_id'] . "-" . date('Y') ;
       $name = $row['name'];
       $address = $row['address'];
       $purpose = $row['purpose'];
@@ -73,7 +73,7 @@
       const element = document.getElementById('container_content');
       var opt = {
         margin: 0,
-        filename: 'html2pdf_example.pdf',
+        filename: 'chainsaw document.pdf',
         image: {
           type: 'jpeg',
           quality: 0.98
@@ -110,7 +110,7 @@
       </div>
 
       <h4 style="text-align: center;">CERTIFICATE OF REGISTRATION</h4>
-      <p style="text-align: center;"><u>No. <?php echo $registration_no; ?>(NEW)</u></p>
+      <p style="text-align: center;"><u><?php echo $permit_no; ?>(NEW)</u></p>
 
       <p>After having compiled with the provision of DENR Administrative Order No. 2003 -24, Series of 2003 otherwise known as “The Implementing Rules and Regulations of the Chainsaw Act of 2002 (RA No. 9175)” entitled “AN ACT REGULATING THE OWNERSHIPT, POSSESSION, SALE, IMPORTATION AND USE OF CHAINSAWS PENALIZING VIOLATIONS THEREOF AND FOR OTHER PURPOSES” this Certificate of Registration to own, possess and / or use a chainsaw hereby issued to:</p><br>
       <h4 style="text-align: center;"><?php echo $name; ?></h4>

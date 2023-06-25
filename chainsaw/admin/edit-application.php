@@ -93,7 +93,6 @@ if (isset($_POST['submit'])) {
         exit();
       } else {
         $display_error = "You can't upload files of this type";
-        header("location: add-new-application.php");
       }
     }
   
