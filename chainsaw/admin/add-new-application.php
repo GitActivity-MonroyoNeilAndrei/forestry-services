@@ -31,12 +31,12 @@ if(isset($_POST['submit'])){
   $date_and_time_submitted = date('Y-m-d H:i:s');
 
 
-//   $select = "SELECT * FROM registrations WHERE name = '$name' && brand = '$brand' && status = '$status'";
-//   $check = $conn->query($select);
+  $select = "SELECT * FROM registrations WHERE name = '$name' && brand = '$brand' && status = '$status'";
+  $check = $conn->query($select);
 
-// mysqli_num_rows($check) > 0
 
-  if(false){
+
+  if(mysqli_num_rows($check) > 0){
     // if there is a data retrieve, display an error prompting the user that this email and password already exist
     $error = 'chainsaw already registered!';
     //get the clientID
@@ -82,8 +82,7 @@ if(isset($_POST['submit'])){
           $result = $conn->query($insert);
 
           
-          // header("location: list-of-applications.php");
-          header("location: add-new-application.php");
+          header("location: list-of-applications.php");
           exit();
           
 
