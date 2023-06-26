@@ -17,7 +17,7 @@
 
     if(mysqli_num_rows($result) > 0) {
       $_SESSION['admin_username'] = $username;
-      header("location: ../chainsaw/admin/crude-clients.php");
+      header("location: ../forestry-services-homepage-admin.php");
     }else{
       $error = "incorrect email or password";
     }

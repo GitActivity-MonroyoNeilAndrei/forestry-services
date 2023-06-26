@@ -91,8 +91,8 @@
                       <td>$row[name]</td>
                       <td>$row[address]</td>
                       <td>$row[purpose]</td>
-                      <td><a type='button' class='btn btn-succcess' href='view-document.php?url=$row[pltp]&path=updating-of-application-form'>View</a></td>
-                      <td><a type='button' class='btn btn-succcess' href='view-document.php?url=$row[vehicle_information]&path=updating-of-application-form'>View</a></td>
+                      <td><a type='button' class='btn btn-success' href='view-document.php?url=$row[pltp]&path=updating-of-application-form'>View</a></td>
+                      <td><a type='button' class='btn btn-success' href='view-document.php?url=$row[vehicle_information]&path=updating-of-application-form'>View</a></td>
                       <td>$row[location_from]</td>
                       <td>$row[location_to]</td>
                       <td>$row[species]</td>
