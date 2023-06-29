@@ -54,9 +54,9 @@
     
 
     <label for="username" class="form-label">Username</label>
-    <input type="text" placeholder="username" class="form-control mb-2" name="username">
+    <input type="text" placeholder="username" class="form-control mb-2" name="username" required>
     <label for="password" class="form-label">Password</label>
-    <input type="password" placeholder="password" class="form-control mb-2" name="password">
+    <input type="password" placeholder="password" class="form-control mb-2" name="password" required>
     <input type="submit" class="mx-auto my-1 btn btn-primary" value="Log In" name="submit">
     <a href="" class="text-center">Forgot Password?</a>
     <p class="text-center">Not Registered? <a href="register-admin.php">Create an account</a></p>

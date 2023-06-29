@@ -66,13 +66,13 @@ if (!isset($_SESSION['username'])) {
     </div>
     <div class="container">
         
-        <a href="chainsaw/client/chainsaw-homepage.php">
+        <a id="chainsaw" href="chainsaw/client/chainsaw-homepage.php">
             <img src="img/icons/chainsaw.PNG" alt="">
         </a>
-        <a href="cov/client/cov-homepage.php">
+        <a id="cov" href="cov/client/cov-homepage.php">
             <img src="img/icons/cov.PNG" alt="">
         </a>
-        <a href="ptpr/client/ptpr-homepage.php">
+        <a id="ptpr" href="ptpr/client/ptpr-homepage.php">
             <img src="img/icons/ptpr.PNG" alt="">
         </a>
     </div>

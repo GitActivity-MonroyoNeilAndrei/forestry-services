@@ -57,21 +57,21 @@ if (isset($_POST['register'])) {
     ?>
     <img src="../img/penro-logo.png" alt="">
     <label for="">Username:</label>
-    <input name="username" class="form-control" type="text">
+    <input name="username" class="form-control" type="text" required>
     <label for="">Business Name:</label>
-    <input name="business-name" class="form-control" type="text">
+    <input name="business-name" class="form-control" type="text" required>
     <label for="">Owner's Name:</label>
-    <input name="owners-name" class="form-control" type="text">
+    <input name="owners-name" class="form-control" type="text" required>
     <label for="">Address:</label>
-    <input name="address" class="form-control" type="text">
+    <input name="address" class="form-control" type="text" required>
     <label for="">Contact Number:</label>
-    <input name="contact-number" class="form-control" type="number">
+    <input name="contact-number" class="form-control" type="number" required>
     <label for="">Email Address:</label>
-    <input name="email-address" class="form-control" type="email">
+    <input name="email-address" class="form-control" type="email" required>
     <label for="">Password:</label>
-    <input name="password" class="form-control" type="password">
+    <input name="password" class="form-control" type="password" required>
     <label for="">Confirm Password:</label>
-    <input name="confirm-password" class="form-control" type="password">
+    <input name="confirm-password" class="form-control" type="password" required>
     <input class="btn btn-success" type="submit" name="register" value="Register">
     <a href="">Forgot Password</a>
     <p>Already have an Account?<a href="login-client.php">Login here</a></p>

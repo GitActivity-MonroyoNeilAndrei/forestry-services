@@ -31,7 +31,7 @@ if(!isset($_SESSION['username'])){
         <h3 class=" header-texts">PENRO</h3>
       </div>
       <div class="dropdown">
-        <button class="dropbtn">SureName, First Name, M.</button>
+        <button class="dropbtn"><?php echo $_SESSION["username"]; ?></button>
         <div class="dropdown-content">
           <a href="#">My Profile</a>
           <a href="../../logout.php">Logout</a>
@@ -44,7 +44,7 @@ if(!isset($_SESSION['username'])){
           <ul>
           <li onclick="location.href='../../forestry-services-homepage.php'">Home</li>
             <li class="nav-link-active" onclick="location.href='chainsaw-homepage.php'">Dashboard</li>
-            <li onclick="location.href='application-for-new-registration.php'">Application for New Registration</li>
+            <li id="application-for-new-registration" onclick="location.href='application-for-new-registration.php'">Application for New Registration</li>
             <li onclick="location.href='application-for-renewal.php'">Application for Renewal</li>
             <li onclick="location.href='reg-stat-mon-for-draft.php'">Registration Status Monitoring</li>
           </ul>

@@ -68,10 +68,10 @@
     ?>
     <img src="../images/penro-logo.png" alt="">
     <label for="">Username:</label>
-    <input name="username" class="form-control" type="text">
+    <input id="username" name="username" class="form-control" type="text" required>
     <label for="">Password:</label>
-    <input name="password" class="form-control" type="password">
-    <input name="login" class="btn btn-success" type="submit" value="Log In">
+    <input id="password" name="password" class="form-control" type="password" required>
+    <input id="login" name="login" class="btn btn-success" type="submit" value="Log In">
     <a href="">Forgot Password</a>
     <p>Not registered?<a href="register-client.php">Create an Account</a></p>
   </form>

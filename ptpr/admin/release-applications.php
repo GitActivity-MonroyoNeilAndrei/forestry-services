@@ -1,5 +1,6 @@
 <?php
   @include "../../database/config.php";
+  session_start();
 
 ?>
 
@@ -30,7 +31,7 @@
         <h3 class=" header-texts">PENRO</h3>
       </div>
       <div class="dropdown">
-        <button class="dropbtn">SureName, First Name, M.</button>
+        <button class="dropbtn"><?php echo $_SESSION["admin_username"]; ?></button>
         <div class="dropdown-content">
           <a href="#">My Profile</a>
           <a href="../../admin-logout.php">Logout</a>
