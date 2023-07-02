@@ -18,7 +18,7 @@
   <link rel="stylesheet" href="../../css/bootstrap.css?<?php echo time(); ?>">
 </head>
 <body>
-<button onclick="history.back();" class="btn btn-danger" style="position: absolute; left: 1rem; top: 1rem;">Back</button>
+<button onclick="history.back();" class="btn btn-danger" style="position: fixed; left: 1rem; top: 1rem;">Back</button>
   <div style="width: 80vw; margin: 50px auto;">
     <img style="height: 100%; width: 100%;" src="../uploads/<?php echo $_GET['url'] ?>" alt="">
   </div>

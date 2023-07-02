@@ -45,7 +45,7 @@ if (!isset($_SESSION['username'])) {
     </div>
     <div class="page-content">
       <div class="nav-links">
-        <nav>
+        <nav  style="position: sticky; top: 6vh;">
           <ul>
             <li onclick="location.href='../../forestry-services-homepage.php'">Home</li>
             <li onclick="location.href='cov-homepage.php'">Dashboard</li>

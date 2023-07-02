@@ -8,7 +8,7 @@
   <link rel="stylesheet" href="../../css/bootstrap.css">
 </head>
 <body>
-  <button style="position: absolute; left: 1rem; top: 1rem;" onclick="history.back();" class="btn btn-danger">Back</button>
+  <button style="position: fixed; left: 1rem; top: 1rem;" onclick="history.back();" class="btn btn-danger">Back</button>
   <div style="width: 80vw; margin: 50px auto;">
     <img style="height: 100%; width: 100%;" src="../uploads/<?php echo $_GET['url'] ?>" alt="">
   </div>

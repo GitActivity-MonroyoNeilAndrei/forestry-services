@@ -31,7 +31,7 @@ session_start();
     </div>
   </div>
   <div class="page-content">
-    <div class="nav-links">
+    <div class="nav-links" style="position: sticky; top: 0;">
       <nav>
         <ul>
         <li onclick="location.href='../../forestry-services-homepage-admin.php'">Home</li>

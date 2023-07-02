@@ -19,7 +19,7 @@
   <link rel="stylesheet" href="../../css/admin.css?<?php echo time(); ?>">
 </head>
 <body>
-  <button class="btn btn-danger" style="position: absolute; left: 1rem; top: 1rem;" onclick="history.back();">Back</button>
+  <button class="btn btn-danger" style="position: fixed; left: 1rem; top: 1rem;" onclick="history.back();">Back</button>
   <div style="width: 80vw; margin: 50px auto;">
     <img style="height: 100%; width: 100%;" src="../uploads/<?php echo $_GET['url'] ?>" alt="">
   </div>

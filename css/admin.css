@@ -85,7 +85,6 @@ a {
 }
 
 .nav-links {
-  /* min-width: 12rem; */
   min-height: auto;
   background-color: #364150;
   color: #EEEEEE;
@@ -114,9 +113,10 @@ div.nav-links nav ul li:hover {
 
 
 .content {
-  width: 100%;
+  width: 90%;
   padding: .4rem;
-  background-color: #EEEEEE;
+  background-color: #ffffff;
+  
 }
 
 .content-container {

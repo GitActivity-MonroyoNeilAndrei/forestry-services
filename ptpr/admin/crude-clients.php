@@ -32,7 +32,7 @@ session_start();
   </div>
   <div class="page-content">
     <div class="nav-links">
-      <nav>
+      <nav  style="position: sticky; top: 6vh;">
         <ul>
         <li onclick="location.href='../../forestry-services-homepage-admin.php'">Home</li>
             <li class="bg-dark-gray2" onclick="location.href='crude-clients.php'">List of Clients</li>

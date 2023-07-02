@@ -1,4 +1,4 @@
-<?php
+f<?php
 
 @include "../../database/config.php";
 @include "../time.php";
