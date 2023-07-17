@@ -15,6 +15,7 @@ $admins_no_of_submissions = [];
 $admins_id = [];
 $choosen_admin = "";
 $admin_username = "";
+date_default_timezone_set('Asia/Manila');
 
 session_start();
 

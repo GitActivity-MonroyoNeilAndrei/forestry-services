@@ -12,7 +12,6 @@ if (isset($_POST['register'])) {
   $password = md5($_POST['password']);
   $confirm_password = md5($_POST['password']);
 
-
   $select = " SELECT * FROM admins WHERE username = '$username' && email_address = '$email_address' && password = '$password'";
   $check = $conn->query($select);
 
@@ -29,7 +28,6 @@ if (isset($_POST['register'])) {
     if (!$result) {
       die("Invalid query: " . $conn->error);
     }
-
     header('location:login-admin.php');
   }
 }

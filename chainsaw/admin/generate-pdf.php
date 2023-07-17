@@ -1,4 +1,6 @@
 <?php
+date_default_timezone_set('Asia/Manila');
+
   session_start();
   @include "../../database/config.php";
   @include "../time.php";
