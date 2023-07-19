@@ -12,6 +12,7 @@
   $expiration_date = "";
   $certificate = "";
 
+
   if($_SERVER['REQUEST_METHOD'] == 'GET'){
     if(!isset($_GET["id"])){
       header("location: chainsaw-stores.php");
@@ -35,7 +36,8 @@
     $address =  $row['address'];
     $date_issued = $row['date_issued'];
     $expiration_date = $row['expiration_date'];
-    $certificate = $row['certificate'];
+    $GLOBALS['certificate'] = $row['certificate'];
+
 
 
   }else if(isset($_POST['submit'])) {
@@ -46,12 +48,6 @@
     $date_issued = mysqli_real_escape_string($conn, $_POST['date-issued']);
     $expiration_date = mysqli_real_escape_string($conn, $_POST['expiration-date']);
 
-    $select = "SELECT * FROM chainsaw_stores WHERE permit_number = '$permit_number' && bus_name = '$bus_name'";
-    $check = $conn->query($select);
-
-    if(mysqli_num_rows($check) > 0){
-      $error = "chainsaw store already registered";
-    }else {
 
       $img_name = $_FILES['certificate']['name'];
       $img_size = $_FILES['certificate']['size'];
@@ -65,23 +61,36 @@
         $allowed_exs = array("jpg", "jpeg", "png");
 
         if(in_array($img_ex_lc, $allowed_exs)){
+
+
+          $sql2 = "SELECT * FROM chainsaw_stores WHERE chainsaw_store_id = $_GET[id]";
+          echo $sql2;
+          $result2 = $conn->query($sql2);
+
+          while($row2 = $result2->fetch_assoc()) {
+            unlink("../uploads/" . $row2['certificate']);
+          }
+
+          
+
           $new_img_name = uniqid("IMG-", true). '.'.$img_ex_lc;
 
           $img_upload_path = '../uploads/'.$new_img_name;
 
           move_uploaded_file($tmp_name, $img_upload_path);
 
-          $insert = "INSERT INTO chainsaw_stores (permit_number, bus_name, owners_name, address, date_issued, expiration_date, certificate) VALUES ('$permit_number', '$bus_name', '$owners_name', '$address', '$date_issued', '$expiration_date', '$new_img_name')";
-          $result = $conn->query($insert);
+
+          $update = "UPDATE chainsaw_stores SET permit_number = '$permit_number', bus_name = '$bus_name', owners_name = '$owners_name', address = '$address', date_issued = '$date_issued', expiration_date = '$expiration_date', certificate = '$new_img_name' WHERE chainsaw_store_id = $_GET[id]";
+
+          echo $update;
+
+          $result = $conn->query($update);
 
           header("location: chainsaw-stores.php");
         }else{
           $display_error = "You cant upload files at this type";
         }
       }
-
-
-    }
 }
 
 ?>
@@ -146,13 +155,13 @@
 
     <div class="form-group">
       <label class="form-label" for="certificate">Certificate</label><br>
-      <a href="view-document.php?url=<?php echo $certificate; ?>&path=edit-chainsaw-store&id=<?php echo $id; ?>"><img style="width: 70px;" src="../uploads/<?php echo $certificate; ?>" alt="img"></a>
+      <a href="view-document.php?url=<?php echo $certificate; ?>&path=edit-chainsaw-store&id=<?php echo $id; ?>"><img style="width: 70px;" src="../uploads/<?php echo $GLOBALS['certificate']; ?>" alt="img"></a>
       <input type="file" class="form-control" name="certificate" required>
     </div>
 
     <div class="d-flex justify-content-evenly mt-4 mb-2">
       <a class="btn btn-secondary" href="chainsaw-stores.php">Cancel</a>
-      <input name="submit" type="submit" class="btn btn-primary" value="Register">
+      <input name="submit" type="submit" class="btn btn-primary" value="Edit">
     </div>
 
 

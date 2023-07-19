@@ -95,13 +95,13 @@
     </div>
 
     <div class="form-group">
-      <label class="form-label" for="address">Date Issued</label>
-      <input class="form-control" type="text" name="date-issued" required>
+      <label class="form-label" for="date-issued">Date Issued</label>
+      <input class="form-control" type="date" name="date-issued" required>
     </div>
 
     <div class="form-group">
-      <label class="form-label" for="address">Expiration Date</label>
-      <input class="form-control" type="text" name="expiration-date" required>
+      <label class="form-label" for="expiration-date">Expiration Date</label>
+      <input class="form-control" type="date" name="expiration-date" required>
     </div>
     
     <div class="form-group">
