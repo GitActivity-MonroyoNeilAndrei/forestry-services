@@ -1,4 +1,4 @@
-f<?php
+<?php
 
 @include "../../database/config.php";
 @include "../time.php";
@@ -155,9 +155,6 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
       while ($row = $lowest_result->fetch_assoc()) {
         $admin_username = $row['username'];
       }
-
-
-
 
 
       $sql = "UPDATE registrations " . "SET name = '$name', address = '$address', purpose = '$purpose', chainsaw_receipt = '$new_img_name1', mayors_permit = '$new_img_name2', brand = '$brand', model = '$model', serial_no = '$serial_number', date_of_acquisition = '$date_of_acquisition', power_output = '$power_output', maximum_length_of_guidebar = '$maximum_length_of_guidebar', country_of_origin = '$country_of_origin', purchase_price = '$purchase_price', received_by = '$admin_username' " . "WHERE registration_id = $id";

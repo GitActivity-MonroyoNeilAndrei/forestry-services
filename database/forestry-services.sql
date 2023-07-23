@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Jun 23, 2023 at 07:06 AM
+-- Generation Time: Jul 20, 2023 at 11:15 AM
 -- Server version: 10.4.25-MariaDB
 -- PHP Version: 8.1.10
 
@@ -170,6 +170,7 @@ CREATE TABLE `registrations` (
   `purpose` varchar(255) DEFAULT NULL,
   `chainsaw_receipt` varchar(255) DEFAULT NULL,
   `mayors_permit` varchar(255) DEFAULT NULL,
+  `new_documents` varchar(100) DEFAULT NULL,
   `brand` varchar(255) DEFAULT NULL,
   `model` varchar(255) DEFAULT NULL,
   `serial_no` varchar(255) DEFAULT NULL,
@@ -245,37 +246,37 @@ ALTER TABLE `registrations`
 -- AUTO_INCREMENT for table `admins`
 --
 ALTER TABLE `admins`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=10;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=16;
 
 --
 -- AUTO_INCREMENT for table `chainsaw_stores`
 --
 ALTER TABLE `chainsaw_stores`
-  MODIFY `chainsaw_store_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=7;
+  MODIFY `chainsaw_store_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=14;
 
 --
 -- AUTO_INCREMENT for table `clients`
 --
 ALTER TABLE `clients`
-  MODIFY `client_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
+  MODIFY `client_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=7;
 
 --
 -- AUTO_INCREMENT for table `cov_registrations`
 --
 ALTER TABLE `cov_registrations`
-  MODIFY `cov_registration_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=23;
+  MODIFY `cov_registration_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=28;
 
 --
 -- AUTO_INCREMENT for table `ptpr_registrations`
 --
 ALTER TABLE `ptpr_registrations`
-  MODIFY `ptpr_registration_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=33;
+  MODIFY `ptpr_registration_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=34;
 
 --
 -- AUTO_INCREMENT for table `registrations`
 --
 ALTER TABLE `registrations`
-  MODIFY `registration_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=19;
+  MODIFY `registration_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=160;
 
 --
 -- Constraints for dumped tables

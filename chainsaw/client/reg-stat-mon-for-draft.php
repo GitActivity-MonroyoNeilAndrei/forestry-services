@@ -43,7 +43,7 @@ if(!isset($_SESSION['username'])){
             <li onclick="location.href='../../forestry-services-homepage.php'">Home</li>
             <li onclick="location.href='chainsaw-homepage.php'">Dashboard</li>
             <li onclick="location.href='application-for-new-registration.php'">Application for New Registration</li>
-            <li onclick="location.href='application-for-renewal.php'">Application for Renewal</li>
+            <li onclick="location.href='verification-for-renewal.php'">Application for Renewal</li>
             <li class="nav-link-active" onclick="location.href='reg-stat-mon-for-draft.php'">Registration Status Monitoring</li>
           </ul>
         </nav>
@@ -91,7 +91,7 @@ if(!isset($_SESSION['username'])){
               while($row = $result->fetch_assoc()){
                 echo "
                 <tr>
-                  <td>$row[registration_number]$row[registration_id]</td>
+                  <td>$row[registration_number]</td>
                   <td class='px-3'>$row[date_and_time_encoded]</td>
                   <td class='px-3'>$row[date_and_time_updated]</td>
                   <td class='px-3'>$row[uploaded_requirements]</td>

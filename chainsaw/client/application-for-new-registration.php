@@ -200,6 +200,15 @@ if(isset($_POST['submit'])){
           $insert = "INSERT INTO registrations (registration_number, client_id, name, address, purpose, chainsaw_receipt, mayors_permit, brand, model, serial_no, date_of_acquisition, power_output, maximum_length_of_guidebar, country_of_origin, purchase_price, received_by, date_and_time_submitted, uploaded_requirements, status) " . "VALUES ('$date_now', '$client_id', '$name', '$address', '$purpose', '$new_img_name1', '$new_img_name2', '$brand', '$model', '$serial_number', '$date_of_acquisition', '$power_output', '$maximum_length_of_guidebar', '$country_of_origin', '$purchase_price', '$admin_username', '$date_and_time_submitted', '$uploaded_requirements', '$status')";
           $result = $conn->query($insert);
 
+
+          $last_id = $conn->insert_id;
+
+          $update_reg_num = "UPDATE registrations SET registration_number = CONCAT(registration_number, registration_id) WHERE registration_id = $last_id";
+          $result2 = $conn->query($update_reg_num);
+
+
+
+
           $update_admin_submission = "UPDATE admins SET number_of_submissions = number_of_submissions + 1 WHERE id = $lowest_admin_id";
           $admin_submission_result = $conn->query($update_admin_submission);
           
@@ -255,7 +264,7 @@ if(isset($_POST['submit'])){
           <li onclick="location.href='../../forestry-services-homepage.php'">Home</li>
             <li onclick="location.href='chainsaw-homepage.php'">Dashboard</li>
             <li class="nav-link-active" onclick="location.href='application-for-new-registration.php'">Application for New Registration</li>
-            <li onclick="location.href='application-for-renewal.php'">Application for Renewal</li>
+            <li onclick="location.href='verification-for-renewal.php'">Application for Renewal</li>
             <li onclick="location.href='reg-stat-mon-for-draft.php'">Registration Status Monitoring</li>
           </ul>
         </nav>

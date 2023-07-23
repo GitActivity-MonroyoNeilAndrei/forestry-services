@@ -140,12 +140,12 @@
 
     <div class="form-group">
       <label class="form-label" for="address">Date Issued</label>
-      <input class="form-control" type="text" name="date-issued" value="<?php echo  $date_issued; ?>" required>
+      <input class="form-control" type="date" name="date-issued" value="<?php echo  $date_issued; ?>" required>
     </div>
 
     <div class="form-group">
       <label class="form-label" for="address">Expiration Date</label>
-      <input class="form-control" type="text" name="expiration-date" value="<?php echo $expiration_date; ?>" required>
+      <input class="form-control" type="date" name="expiration-date" value="<?php echo $expiration_date; ?>" required>
     </div>
     
     <div class="form-group">
