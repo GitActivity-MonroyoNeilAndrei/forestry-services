@@ -2,6 +2,12 @@
 
 @include "../database/config.php";
 
+session_start();
+
+if(isset($_SESSION['username'])){
+  header("location: ../forestry-services-homepage.php");
+}
+
 $errorMessage = "";
 
 if (isset($_POST['register'])) {

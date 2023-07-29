@@ -11,7 +11,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <link rel="stylesheet" href="style.css">
   <script defer src="script.js"></script>
-  <title>practice website</title>
+  <title>View Submitted Application</title>
   <link rel="stylesheet" href="../../css/bootstrap.css?<?php echo time(); ?>">
   <link rel="stylesheet" href="../../css/icons/font/bootstrap-icons.css?<?php echo time(); ?>">
   <script defer src="../../js/bootstrap.js"></script>

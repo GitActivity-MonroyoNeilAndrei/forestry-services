@@ -3,6 +3,7 @@
 @include "../../database/config.php";
 @include "../time.php";
 
+
 $url_status = "";
 
 if ($_GET['status'] == 'draft') {
@@ -285,7 +286,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <link rel="stylesheet" href="style.css">
   <script defer src="script.js"></script>
-  <title>practice website</title>
+  <title>Edit Application</title>
   <link rel="stylesheet" href="../../css/bootstrap.css?<?php echo time(); ?>">
   <script defer src="../../js/bootstrap.js"></script>
   <script defer src="../../js/script.js"></script>

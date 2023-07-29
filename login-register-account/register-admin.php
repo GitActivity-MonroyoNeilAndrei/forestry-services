@@ -2,6 +2,13 @@
 
 @include "../database/config.php";
 
+session_start();
+
+if (isset($_SESSION['admin_username'])) {
+  // if not go back to the index file or page
+  header("location: ../forestry-services-homepage-admin.php");
+}
+
 $errorMessage = "";
 
 if (isset($_POST['register'])) {
@@ -76,7 +83,7 @@ if (isset($_POST['register'])) {
     <input name="confirm-password" class="form-control" type="password" required>
     <input name="register" class="btn btn-success" type="submit" value="Log In">
     <a href="">Forgot Password</a>
-    <p>Not registered?<a href="">Create an Account</a></p>
+    <p>Already have an Account?<a href="login-admin.php">Login here</a></p>
   </form>
 </body>
 

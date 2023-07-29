@@ -19,10 +19,9 @@ if (!isset($_SESSION['username'])) {
   <meta charset="UTF-8">
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Admin Home Page</title>
+  <title>Application for Expired</title>
   <link rel="stylesheet" href="style.css">
   <script defer src="script.js"></script>
-  <title>practice website</title>
   <link rel="stylesheet" href="../../css/reg-stat-mon.css?<?php echo time(); ?>">
   <link rel="stylesheet" href="../../css/bootstrap.css?<?php echo time(); ?>">
   <script defer src="../../js/bootstrap.js"></script>

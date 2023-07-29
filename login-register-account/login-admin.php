@@ -4,6 +4,11 @@
 
   session_start();  
 
+  if (isset($_SESSION['admin_username'])) {
+    // if not go back to the index file or page
+    header("location: ../forestry-services-homepage-admin.php");
+  }
+
   if(isset($_POST['submit'])) {
     $username = mysqli_real_escape_string($conn, $_POST['username']);
     $password = md5($_POST['password']);

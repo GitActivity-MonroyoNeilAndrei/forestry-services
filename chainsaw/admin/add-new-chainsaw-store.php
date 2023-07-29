@@ -15,7 +15,7 @@
     $check = $conn->query($select);
 
     if(mysqli_num_rows($check) > 0){
-      $error = "chainsaw store already registered";
+      $display_error = "chainsaw store already registered";
     }else {
 
       $img_name = $_FILES['certificate']['name'];
@@ -41,8 +41,10 @@
 
           header("location: chainsaw-stores.php");
         }else{
-          $display_error = "You cant upload files at this type";
+          $display_error = "You can't upload files at this type";
         }
+      } else {
+        $display_error = "You can't upload files at this type";
       }
 
 
@@ -57,7 +59,7 @@
   <meta charset="UTF-8">
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Chainsaw Registration</title>
+  <title>Add New Chainsaw Store</title>
   <link rel="stylesheet" href="../../css/bootstrap.css?<?php echo time();?>">
   <script defer src="../../js/bootstrap.js"></script>
   <script defer src="../../js/script.js"></script>
@@ -69,10 +71,10 @@
     <?php
       
       // prompt error if user already exist
-      if(isset($error)) {
+      if(isset($display_error)) {
         echo '
         <div class="alert alert-danger" role="alert">
-          '.$error.'
+          '.$display_error.'
         </div> ';
       }
 

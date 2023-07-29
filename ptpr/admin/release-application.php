@@ -55,7 +55,7 @@ date_default_timezone_set('Asia/Manila');
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Document</title>
+  <title>Release Application</title>
   <link rel="stylesheet" href="../../css/bootstrap.css?<?php echo time(); ?>">
   <link rel="stylesheet" href="../../css/admin.css?<?php echo time(); ?>">
   <style type="text/css">
