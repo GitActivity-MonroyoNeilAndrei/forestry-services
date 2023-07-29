@@ -3,13 +3,50 @@
 
 session_start();
 
+date_default_timezone_set('Asia/Manila');
+$date_today = date('Y-m-d');
+
 // checks if the user is an ordinary user
-if(!isset($_SESSION['admin_username'])){
-   // if not go back to the index file or page
-   header('location: ../../login-register-account/login-admin.php');
+if (!isset($_SESSION['admin_username'])) {
+    // if not go back to the index file or page
+    header('location: ../../login-register-account/login-admin.php');
 }
 
-?> 
+$select = "SELECT * FROM registrations WHERE validity_date != '' || validity_date != NULL";
+$check = $conn->query($select);
+
+while ($row = mysqli_fetch_assoc($check)) {
+    if($row['validity_date'] < $date_today) {
+        $update = "UPDATE registrations SET status = 'for-expired' WHERE registration_id = $row[registration_id]";
+        $conn->query($update);
+    } 
+}
+
+
+$select = "SELECT * FROM cov_registrations WHERE validity_date != '' || validity_date != NULL";
+$check = $conn->query($select);
+
+while ($row = mysqli_fetch_assoc($check)) {
+    if($row['validity_date'] < $date_today) {
+        $update = "UPDATE cov_registrations SET status = 'for-expired' WHERE cov_registration_id = $row[cov_registration_id]";
+        $conn->query($update);
+    } 
+}
+
+
+$select = "SELECT * FROM ptpr_registrations WHERE validity_date != '' || validity_date != NULL";
+$check = $conn->query($select);
+
+while ($row = mysqli_fetch_assoc($check)) {
+    if($row['validity_date'] < $date_today) {
+        $update = "UPDATE ptpr_registrations SET status = 'for-expired' WHERE ptpr_registration_id = $row[ptpr_registration_id]";
+        $conn->query($update);
+    } 
+}
+
+
+
+?>
 
 
 
@@ -37,7 +74,7 @@ if(!isset($_SESSION['admin_username'])){
             left: 50%;
             transform: translate(-50%);
             color: rgb(120, 240, 160);
-        
+
         }
 
         h4 {
@@ -48,7 +85,7 @@ if(!isset($_SESSION['admin_username'])){
             left: 50%;
             transform: translate(-50%);
             color: rgb(120, 240, 160);
-        
+
         }
 
         .overlay {
@@ -72,13 +109,13 @@ if(!isset($_SESSION['admin_username'])){
 
 <body>
 
-<h1>Forestry Services</h1>
-<h4>admin</h4>
+    <h1>Forestry Services</h1>
+    <h4>admin</h4>
     <div class="overlay">
 
     </div>
     <div class="container">
-        
+
         <a href="chainsaw/admin/crude-clients.php">
             <img src="img/icons/chainsaw.PNG" alt="">
         </a>
@@ -90,8 +127,6 @@ if(!isset($_SESSION['admin_username'])){
         </a>
     </div>
 
-</body>
+</body> 
 
 </html>
-
-
