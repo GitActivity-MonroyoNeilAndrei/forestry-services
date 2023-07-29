@@ -75,6 +75,7 @@ if(!isset($_SESSION['username'])){
                   <th>Date and Time Updated (yyyy-mm-dd)</th>
                   <th>Date and Time Returned</th>
                   <th>Uploaded Requirements</th>
+                  <th>Remarks</th>
                   <th>Action</th>
                 </tr>
               </thead>
