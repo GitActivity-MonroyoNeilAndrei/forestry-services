@@ -30,13 +30,13 @@ if (!isset($_SESSION['username'])) {
 
         h1 {
             color: white;
-            font-size: 5em;
+            font-size: 4vw;
             position: absolute;
+            text-align: center;
             top: 5vh;
             left: 50%;
             transform: translate(-50%);
             color: rgb(120, 240, 160);
-            
 
         }
 
@@ -60,7 +60,7 @@ if (!isset($_SESSION['username'])) {
 </head>
 
 <body>
-    <h1>Forestry Services</h1>
+    <h1>ONLINE LOCAL FORESTRY SERVICES</h1>
     <div class="overlay">
 
     </div>

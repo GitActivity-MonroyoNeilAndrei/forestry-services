@@ -68,8 +68,9 @@ while ($row = mysqli_fetch_assoc($check)) {
 
         h1 {
             color: white;
-            font-size: 5em;
+            font-size: 4vw;
             position: absolute;
+            text-align: center;
             top: 5vh;
             left: 50%;
             transform: translate(-50%);
@@ -79,9 +80,10 @@ while ($row = mysqli_fetch_assoc($check)) {
 
         h4 {
             color: white;
-            font-size: 3em;
+            font-size: 3vw;
+            font-style: italic;
             position: absolute;
-            top: 18vh;
+            top: 22vh;
             left: 50%;
             transform: translate(-50%);
             color: rgb(120, 240, 160);
@@ -109,8 +111,9 @@ while ($row = mysqli_fetch_assoc($check)) {
 
 <body>
 
-    <h1>Forestry Services</h1>
+    <h1>ONLINE LOCAL FORESTRY SERVICES</h1>
     <h4>admin</h4>
+
     <div class="overlay">
 
     </div>
