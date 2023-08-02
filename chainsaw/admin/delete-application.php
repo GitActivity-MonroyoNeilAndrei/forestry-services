@@ -27,6 +27,7 @@ if (isset($_GET['id'])) {
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="icon" href="../../img/penro-logo.png">
   <title>Delete Application</title>
   <link rel="stylesheet" href="../../css/bootstrap.css?<?php echo time();?>">
   <script defer src="../../js/bootstrap.js"></script>

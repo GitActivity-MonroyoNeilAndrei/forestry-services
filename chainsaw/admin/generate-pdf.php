@@ -158,9 +158,7 @@ date_default_timezone_set('Asia/Manila');
 
 
 <script>generatePDF();</script>
-</body>
 
-</html>
 </body>
 
 </html>

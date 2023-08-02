@@ -20,6 +20,8 @@ if (!isset($_SESSION['username'])) {
     <title>Home</title>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="icon" href="img/penro-logo.png">
+    <title>Homepage</title>
     <link rel="stylesheet" href="css/bootstrap.css?<?php echo time(); ?>">
     <link rel="stylesheet" href="css/homepage.css?php echo time(); ?>">
     <style type="text/css">
@@ -30,14 +32,19 @@ if (!isset($_SESSION['username'])) {
 
         h1 {
             color: white;
-            font-size: 4vw;
+            font-size: 3rem;
             position: absolute;
             text-align: center;
             top: 5vh;
             left: 50%;
             transform: translate(-50%);
             color: rgb(120, 240, 160);
+        }
 
+        @media (max-width: 600px) {
+            h1 {
+                font-size: 2rem;
+            }
         }
 
         .overlay {
@@ -65,7 +72,7 @@ if (!isset($_SESSION['username'])) {
 
     </div>
     <div class="container">
-        
+
         <a id="chainsaw" href="chainsaw/client/chainsaw-homepage.php">
             <img src="img/icons/chainsaw.PNG" alt="">
         </a>

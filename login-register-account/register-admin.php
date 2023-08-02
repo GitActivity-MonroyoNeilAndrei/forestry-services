@@ -15,6 +15,7 @@ if (isset($_POST['register'])) {
   $username = mysqli_real_escape_string($conn, $_POST['username']);
   $address = mysqli_real_escape_string($conn, $_POST['address']);
   $contact_number = mysqli_real_escape_string($conn, $_POST['contact-number']);
+  $sex = mysqli_real_escape_string($conn, $_POST['sex']);
   $email_address = mysqli_real_escape_string($conn, $_POST['email-address']);
   $password = md5($_POST['password']);
   $confirm_password = md5($_POST['password']);
@@ -29,7 +30,7 @@ if (isset($_POST['register'])) {
     // if there is a data retrieve, display an error prompting the user that this email and password already exist
     $error = 'admin already exist!';
   } else {
-    $insert = "INSERT INTO admins (username, address, contact_number, email_address, password) " . "VALUES ('$username', '$address', '$contact_number', '$email_address', '$password')";
+    $insert = "INSERT INTO admins (username, address, contact_number, sex, email_address, password) " . "VALUES ('$username', '$address', '$contact_number', '$sex', '$email_address', '$password')";
     $result = $conn->query($insert);
 
     if (!$result) {
@@ -47,6 +48,7 @@ if (isset($_POST['register'])) {
   <meta charset="UTF-8">
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="icon" href="../img/penro-logo.png">
   <title>Chainsaw Registration</title>
   <link rel="stylesheet" href="../css/bootstrap.css?<?php echo time(); ?>">
   <link rel="stylesheet" href="../css/register-admin.css?<?php echo time(); ?>">
@@ -75,6 +77,10 @@ if (isset($_POST['register'])) {
     <input name="address" class="form-control" type="text" required>
     <label for="">Contact Number:</label>
     <input name="contact-number" class="form-control" type="number" required>
+    <select class="form-select" name="sex">
+      <option value="male">Male</option>
+      <option value="female">Female</option>
+    </select>
     <label for="">Email Address:</label>
     <input name="email-address" class="form-control" type="email" required>
     <label for="">Password:</label>

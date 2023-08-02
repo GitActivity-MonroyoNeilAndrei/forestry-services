@@ -16,10 +16,10 @@ $select = "SELECT * FROM registrations WHERE validity_date != '' || validity_dat
 $check = $conn->query($select);
 
 while ($row = mysqli_fetch_assoc($check)) {
-    if($row['validity_date'] < $date_today) {
+    if ($row['validity_date'] < $date_today) {
         $update = "UPDATE registrations SET status = 'for-expired' WHERE registration_id = $row[registration_id]";
         $conn->query($update);
-    } 
+    }
 }
 
 
@@ -27,10 +27,10 @@ $select = "SELECT * FROM cov_registrations WHERE validity_date != '' || validity
 $check = $conn->query($select);
 
 while ($row = mysqli_fetch_assoc($check)) {
-    if($row['validity_date'] < $date_today) {
+    if ($row['validity_date'] < $date_today) {
         $update = "UPDATE cov_registrations SET status = 'for-expired' WHERE cov_registration_id = $row[cov_registration_id]";
         $conn->query($update);
-    } 
+    }
 }
 
 
@@ -38,10 +38,10 @@ $select = "SELECT * FROM ptpr_registrations WHERE validity_date != '' || validit
 $check = $conn->query($select);
 
 while ($row = mysqli_fetch_assoc($check)) {
-    if($row['validity_date'] < $date_today) {
+    if ($row['validity_date'] < $date_today) {
         $update = "UPDATE ptpr_registrations SET status = 'for-expired' WHERE ptpr_registration_id = $row[ptpr_registration_id]";
         $conn->query($update);
-    } 
+    }
 }
 
 
@@ -57,6 +57,8 @@ while ($row = mysqli_fetch_assoc($check)) {
     <title>Home</title>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="icon" href="img/penro-logo.png">
+    <title>Admin Homepage</title>
     <link rel="stylesheet" href="css/bootstrap.css?<?php echo time(); ?>">
     <link rel="stylesheet" href="css/homepage.css?php echo time(); ?>">
 
@@ -68,27 +70,40 @@ while ($row = mysqli_fetch_assoc($check)) {
 
         h1 {
             color: white;
-            font-size: 4vw;
+            font-size: 3rem;
             position: absolute;
             text-align: center;
             top: 5vh;
             left: 50%;
             transform: translate(-50%);
             color: rgb(120, 240, 160);
-
         }
+
+        @media (max-width: 600px) {
+            h1 {
+                font-size: 2rem;
+            }
+        }
+
+
 
         h4 {
             color: white;
-            font-size: 3vw;
+            font-size: 3rem;
             font-style: italic;
             position: absolute;
             top: 22vh;
             left: 50%;
             transform: translate(-50%);
             color: rgb(120, 240, 160);
-
         }
+
+        @media (max-width: 600px) {
+            h4 {
+                font-size: 2rem;
+            }
+        }
+
 
         .overlay {
             background-color: rgba(0, 0, 0, 0.60);
@@ -130,6 +145,6 @@ while ($row = mysqli_fetch_assoc($check)) {
         </a>
     </div>
 
-</body> 
+</body>
 
 </html>

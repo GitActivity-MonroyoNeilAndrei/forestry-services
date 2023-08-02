@@ -106,6 +106,7 @@ if(isset($_POST['submit'])){
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Add New Application</title>
+  <link rel="icon" href="../../img/penro-logo.png">
   <link rel="stylesheet" href="../../css/bootstrap.css?php echo time(); ?>">
   <link rel="stylesheet" href="../../css/reg-stat-mon.css?<?php echo time(); ?>">
 </head>
