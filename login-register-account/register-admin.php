@@ -4,11 +4,6 @@
 
 session_start();
 
-if (isset($_SESSION['admin_username'])) {
-  // if not go back to the index file or page
-  header("location: ../forestry-services-homepage-admin.php");
-}
-
 $errorMessage = "";
 
 if (isset($_POST['register'])) {
@@ -18,25 +13,29 @@ if (isset($_POST['register'])) {
   $sex = mysqli_real_escape_string($conn, $_POST['sex']);
   $email_address = mysqli_real_escape_string($conn, $_POST['email-address']);
   $password = md5($_POST['password']);
-  $confirm_password = md5($_POST['password']);
+  $confirm_password = md5($_POST['confirm-password']);
 
   $select = " SELECT * FROM admins WHERE username = '$username' && email_address = '$email_address' && password = '$password'";
   $check = $conn->query($select);
 
-  if (!$check) {
-    die("Invalid query: " . $conn->error);
-  }
-  if (mysqli_num_rows($check) > 0) {
-    // if there is a data retrieve, display an error prompting the user that this email and password already exist
-    $error = 'admin already exist!';
+  if ($password != $confirm_password) {
+    $password_error = "password doesn't match";
   } else {
-    $insert = "INSERT INTO admins (username, address, contact_number, sex, email_address, password) " . "VALUES ('$username', '$address', '$contact_number', '$sex', '$email_address', '$password')";
-    $result = $conn->query($insert);
-
-    if (!$result) {
+    if (!$check) {
       die("Invalid query: " . $conn->error);
     }
-    header('location:login-admin.php');
+    if (mysqli_num_rows($check) > 0) {
+      // if there is a data retrieve, display an error prompting the user that this email and password already exist
+      $error = 'admin already exist!';
+    } else {
+      $insert = "INSERT INTO admins (username, address, contact_number, sex, email_address, password) " . "VALUES ('$username', '$address', '$contact_number', '$sex', '$email_address', '$password')";
+      $result = $conn->query($insert);
+
+      if (!$result) {
+        die("Invalid query: " . $conn->error);
+      }
+      header("location: $_GET[path]");
+    }
   }
 }
 ?>
@@ -77,19 +76,27 @@ if (isset($_POST['register'])) {
     <input name="address" class="form-control" type="text" required>
     <label for="">Contact Number:</label>
     <input name="contact-number" class="form-control" type="number" required>
+    <label for="">Sex</label>
     <select class="form-select" name="sex">
       <option value="male">Male</option>
       <option value="female">Female</option>
     </select>
     <label for="">Email Address:</label>
     <input name="email-address" class="form-control" type="email" required>
+    <?php 
+      if(isset($password_error)) {
+        echo "
+        <div class='alert alert-danger' role='alert'>
+          $password_error
+        </div> 
+        ";
+      }
+    ?>
     <label for="">Password:</label>
     <input name="password" class="form-control" type="password" required>
     <label for="">Confirm Password:</label>
     <input name="confirm-password" class="form-control" type="password" required>
-    <input name="register" class="btn btn-success" type="submit" value="Log In">
-    <a href="">Forgot Password</a>
-    <p>Already have an Account?<a href="login-admin.php">Login here</a></p>
+    <input name="register" class="btn btn-success" type="submit" value="Add Admin">
   </form>
 </body>
 

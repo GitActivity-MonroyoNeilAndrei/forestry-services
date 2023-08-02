@@ -9,7 +9,7 @@ session_start();
 <head>
   <meta charset="UTF-8">
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
-  <meta  name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <link rel="icon" href="../../img/penro-logo.png">
   <title>List of Clients</title>
   <link rel="stylesheet" href="../../css/bootstrap.css?<?php echo time(); ?>">
@@ -32,23 +32,34 @@ session_start();
     </div>
   </div>
   <div class="page-content">
-    <div class="nav-links">
-      <nav  style="position: sticky; top: 6vh;">
+    <div class="nav-links" style="position: sticky; top: 0;">
+      <nav>
         <ul>
         <li onclick="location.href='../../forestry-services-homepage-admin.php'">Home</li>
-            <li class="bg-dark-gray2" onclick="location.href='crude-clients.php'">List of Clients</li>
+            <li  class="bg-dark-gray2" onclick="location.href='crude-clients.php'">List of Clients</li>
             <li onclick="location.href='updating-of-application-form.php'">Accept Client Applications</li>
-            <li onclick="location.href='list-of-applications.php'">Generate Applications</li>
-            <li onclick="location.href='release-applications.php'">Released Applications</li>
-
+          <li onclick="location.href='list-of-applications.php'">Generate Applications</li>
+          <li onclick="location.href='release-applications.php'">Released Applications</li>
         </ul>
       </nav>
     </div>
     <div class="content border border-primary">
       <div class="content-container">
         <div class="content-header">
-        <h4>PTPR > <span class="fs-5">List of Clients</span></h4>
+        <h4>COV > <span class="fs-5">List of Clients</span></h4>
         </div>
+
+        <nav class="status-list-nav">
+            <ul>
+              <li style="background-color: #3C9811; color: #FFFFFF;" onclick="location.href='crude-clients.php'">Clients</li>
+              <li onclick="location.href='crude-admins.php'">Admins</li>
+              <li onclick="location.href='crude-signatories.php'">Signatories</li>
+            </ul>
+          </nav>
+
+
+
+
         <a class="btn btn-success bg-green-3" href="add-new-client.php">Add New Client</a>
         <div class="table-responsive">
           <table class="table table-striped table-hover">
@@ -61,6 +72,8 @@ session_start();
                 <th>Address</th>
                 <th>Contact Number</th>
                 <th>Email Address</th>
+                <th>Sex</th>
+                <th>Status</th>
                 <th>Action</th>
               </tr>
             </thead>
@@ -92,10 +105,14 @@ session_start();
             <td>$row[address]</td>
             <td>$row[contact_number]</td>
             <td>$row[email_address]</td>
+            <td>$row[sex]</td>
+            <td>$row[status]</td>
             <td>
-              <a class='btn btn-primary btn-sm' href='edit-client.php?id=$row[client_id]'>Edit</a>
+              <a class='btn btn-primary btn-sm mb-1' href='edit-client.php?id=$row[client_id]'>Edit</a>
 
-              <a class='btn btn-danger btn-sm' href='delete-client.php?id=$row[client_id]'>Delete</a>
+              <a class='btn btn-danger btn-sm mb-1' href='deactivate-client.php?id=$row[client_id]&status=deactivated'>Deactivate</a>
+              <a class='btn btn-success btn-sm' href='deactivate-client.php?id=$row[client_id]&status=activated'>Activate</a>
+
             </td>
           </tr>
             ";

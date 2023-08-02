@@ -15,14 +15,23 @@ if (isset($_POST['submit'])) {
 
   $select = "SELECT * FROM admins WHERE username = '$username' && password = '$password'";
   $result = $conn->query($select);
+  $row = mysqli_fetch_assoc($result);
 
   if (!$result) {
     die("Invalid query: " . $conn->error);
   }
 
   if (mysqli_num_rows($result) > 0) {
-    $_SESSION['admin_username'] = $username;
-    header("location: ../forestry-services-homepage-admin.php");
+
+    if($row['status'] == 'deactivated') {
+      header("location: login-admin.php?status=deactivated");
+    } else {
+
+      $_SESSION['admin_username'] = $username;
+      header("location: ../forestry-services-homepage-admin.php");
+    }
+
+    
   } else {
     $error = "incorrect email or password";
   }
@@ -56,6 +65,12 @@ if (isset($_POST['submit'])) {
       ' . $error . '
       </div>
       ';
+      } else if (isset($_GET['status'])) {
+        echo '
+        <div class="alert alert-danger" role="alert">
+         User has been ' . $_GET['status'] . '
+        </div>
+        ';
       }
       ?>
 
