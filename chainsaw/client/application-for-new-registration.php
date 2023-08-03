@@ -32,6 +32,7 @@ if(isset($_POST['save-draft'])){
   $maximum_length_of_guidebar = mysqli_escape_string($conn, $_POST['maximum-length-of-guidebar']);
   $country_of_origin = mysqli_escape_string($conn, $_POST['country-of-origin']);
   $purchase_price = mysqli_escape_string($conn, $_POST['purchase-price']);
+  $chainsaw_store = mysqli_escape_string($conn, $_POST['accredited-chainsaw']);
   $status = "for-draft";
   $date_now = "PMDQ-CSAW-". $today['year'] . "-" . check_month($today['mon']). check_day($today['mday']);
   $uploaded_requirements = "/";
@@ -83,7 +84,7 @@ if(isset($_POST['save-draft'])){
           move_uploaded_file($tmp_name2, $img_upload_path2);
 
           
-          $insert = "INSERT INTO registrations (registration_number, client_id, name, address, purpose, chainsaw_receipt, mayors_permit, brand, model, serial_no, date_of_acquisition, power_output, maximum_length_of_guidebar, country_of_origin, purchase_price, date_and_time_updated, uploaded_requirements, status) " . "VALUES ('$date_now', '$client_id', '$name', '$address', '$purpose', '$new_img_name1', '$new_img_name2', '$brand', '$model', '$serial_number', '$date_of_acquisition', '$power_output', '$maximum_length_of_guidebar', '$country_of_origin', '$purchase_price', '$date_and_time_updated', '$uploaded_requirements', '$status')";
+          $insert = "INSERT INTO registrations (registration_number, client_id, name, address, purpose, chainsaw_receipt, mayors_permit, brand, model, serial_no, date_of_acquisition, power_output, maximum_length_of_guidebar, country_of_origin, purchase_price, chainsaw_store, date_and_time_updated, uploaded_requirements, status) " . "VALUES ('$date_now', '$client_id', '$name', '$address', '$purpose', '$new_img_name1', '$new_img_name2', '$brand', '$model', '$serial_number', '$date_of_acquisition', '$power_output', '$maximum_length_of_guidebar', '$country_of_origin', '$purchase_price', '$chainsaw_store', '$date_and_time_updated', '$uploaded_requirements', '$status')";
           $result = $conn->query($insert);
 
 
@@ -197,7 +198,7 @@ if(isset($_POST['submit'])){
           }
 
           
-          $insert = "INSERT INTO registrations (registration_number, client_id, name, address, purpose, chainsaw_receipt, mayors_permit, brand, model, serial_no, date_of_acquisition, power_output, maximum_length_of_guidebar, country_of_origin, purchase_price, received_by, date_and_time_submitted, uploaded_requirements, status) " . "VALUES ('$date_now', '$client_id', '$name', '$address', '$purpose', '$new_img_name1', '$new_img_name2', '$brand', '$model', '$serial_number', '$date_of_acquisition', '$power_output', '$maximum_length_of_guidebar', '$country_of_origin', '$purchase_price', '$admin_username', '$date_and_time_submitted', '$uploaded_requirements', '$status')";
+          $insert = "INSERT INTO registrations (registration_number, client_id, name, address, purpose, chainsaw_receipt, mayors_permit, brand, model, serial_no, date_of_acquisition, power_output, maximum_length_of_guidebar, country_of_origin, purchase_price, chainsaw_store, received_by, date_and_time_submitted, uploaded_requirements, status) " . "VALUES ('$date_now', '$client_id', '$name', '$address', '$purpose', '$new_img_name1', '$new_img_name2', '$brand', '$model', '$serial_number', '$date_of_acquisition', '$power_output', '$maximum_length_of_guidebar', '$country_of_origin', '$purchase_price', '$chainsaw_store', '$admin_username', '$date_and_time_submitted', '$uploaded_requirements', '$status')";
           $result = $conn->query($insert);
 
 
@@ -327,7 +328,7 @@ if(isset($_POST['submit'])){
           </div>
     
           <!-- chainsaw complete details -->
-          <div class="p-3 col-sm-7">
+          <div class="pb-3 col-sm-7">
             <h6 class="text-center border-bottom border-dark pb-2" style="--bs-border-opacity: .5;">Chainsaw Complete Details</h5>
             <div class="input-group mb-2">
               <span class="input-group-text">Brand: </span>
@@ -361,6 +362,17 @@ if(isset($_POST['submit'])){
               <span class="input-group-text">Purchase Price: </span>
               <input type="text" class="form-control" name="purchase-price" placeholder='ex. "60000"' required>
             </div>
+            <label class="form-label" for="accredited-chainsaw">Where did you Buy your Chainsaw?:</label>
+            <select class="form-select mx-auto" name="accredited-chainsaw">
+              <?php
+
+              $select3 = "SELECT * FROM chainsaw_stores";
+              $result3 = $conn->query($select3);
+              while ($row3 = $result3->fetch_assoc()) {
+              ?>
+                <option value="<?php echo $row3['bus_name']; ?>"><?php echo $row3['bus_name']; ?></option>
+              <?php } ?>
+            </select>
             <div class="text-center mt-4">
               <input class="btn btn-success mx-2" type="submit" name="save-draft" value="Save as Draft">
               <input class="btn btn-success mx-2" type="submit" name="submit" value="Submit">

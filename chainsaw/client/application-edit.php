@@ -39,6 +39,7 @@ $power_output = "";
 $maximum_length_of_guidebar = "";
 $country_of_origin = "";
 $purchase_price = "";
+$chainsaw_store = "";
 
 
 if ($_SERVER['REQUEST_METHOD'] == 'GET') {
@@ -72,6 +73,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
   $maximum_length_of_guidebar = $row["maximum_length_of_guidebar"];
   $country_of_origin = $row["country_of_origin"];
   $purchase_price = $row["purchase_price"];
+  $chainsaw_store = $row["chainsaw_store"];
 } else if (isset($_POST['save-draft'])) {
   $name = $_POST["name"];
   $address = $_POST["address"];
@@ -84,6 +86,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
   $maximum_length_of_guidebar = $_POST["maximum-length-of-guidebar"];
   $country_of_origin = $_POST["country-of-origin"];
   $purchase_price = $_POST["purchase-price"];
+  $chainsaw_store = $_POST["accredited-chainsaw"];
 
   $id = $_GET["id"];
 
@@ -164,7 +167,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
       }
 
 
-      $sql = "UPDATE registrations " . "SET name = '$name', address = '$address', purpose = '$purpose', chainsaw_receipt = '$new_img_name1', mayors_permit = '$new_img_name2', brand = '$brand', model = '$model', serial_no = '$serial_number', date_of_acquisition = '$date_of_acquisition', power_output = '$power_output', maximum_length_of_guidebar = '$maximum_length_of_guidebar', country_of_origin = '$country_of_origin', purchase_price = '$purchase_price', received_by = '$admin_username' " . "WHERE registration_id = $id";
+      $sql = "UPDATE registrations " . "SET name = '$name', address = '$address', purpose = '$purpose', chainsaw_receipt = '$new_img_name1', mayors_permit = '$new_img_name2', brand = '$brand', model = '$model', serial_no = '$serial_number', date_of_acquisition = '$date_of_acquisition', power_output = '$power_output', maximum_length_of_guidebar = '$maximum_length_of_guidebar', country_of_origin = '$country_of_origin', purchase_price = '$purchase_price', chainsaw_store = '$chainsaw_store', received_by = '$admin_username' " . "WHERE registration_id = $id";
       $result = $conn->query($sql);
 
       header("location: reg-stat-mon-for-draft.php");
@@ -184,6 +187,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
   $maximum_length_of_guidebar = $_POST["maximum-length-of-guidebar"];
   $country_of_origin = $_POST["country-of-origin"];
   $purchase_price = $_POST["purchase-price"];
+  $chainsaw_store = $_POST["accredited-chainsaw"];
   $date_and_time_submitted = date('Y-m-d H:i:s');
   $status = "for-submitted";
 
@@ -271,7 +275,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
 
 
 
-      $sql = "UPDATE registrations " . "SET name = '$name', address = '$address', purpose = '$purpose', chainsaw_receipt = '$new_img_name1', mayors_permit = '$new_img_name2', brand = '$brand', model = '$model', serial_no = '$serial_number', date_of_acquisition = '$date_of_acquisition', power_output = '$power_output', maximum_length_of_guidebar = '$maximum_length_of_guidebar', country_of_origin = '$country_of_origin', purchase_price = '$purchase_price', received_by = '$admin_username', date_and_time_submitted = '$date_and_time_submitted', status = '$status' " . "WHERE registration_id = $id";
+      $sql = "UPDATE registrations " . "SET name = '$name', address = '$address', purpose = '$purpose', chainsaw_receipt = '$new_img_name1', mayors_permit = '$new_img_name2', brand = '$brand', model = '$model', serial_no = '$serial_number', date_of_acquisition = '$date_of_acquisition', power_output = '$power_output', maximum_length_of_guidebar = '$maximum_length_of_guidebar', country_of_origin = '$country_of_origin', purchase_price = '$purchase_price', chainsaw_store = '$chainsaw_store', received_by = '$admin_username', date_and_time_submitted = '$date_and_time_submitted', status = '$status' " . "WHERE registration_id = $id";
       $result = $conn->query($sql);
 
       header("location: reg-stat-mon-for-submitted.php");
@@ -423,6 +427,19 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
             <span class="input-group-text">Purchase Price: </span>
             <input type="text" class="form-control" name="purchase-price" placeholder='ex. "60000"' value="<?php echo $purchase_price; ?>" required>
           </div>
+          <label class="form-label" for="accredited-chainsaw">Where did you Buy your Chainsaw?:</label>
+          <select class="form-select mx-auto" name="accredited-chainsaw">
+            <?php
+
+            $select3 = "SELECT * FROM chainsaw_stores";
+            $result3 = $conn->query($select3);
+            while ($row3 = $result3->fetch_assoc()) {
+            ?>
+              <option <?php if ($chainsaw_store == $row3['bus_name']) {
+                        echo 'selected';
+                      } ?> value="<?php echo $row3['bus_name']; ?>"><?php echo $row3['bus_name']; ?></option>
+            <?php } ?>
+          </select>
           <div class="text-center mt-4">
             <input class="btn btn-success mx-2" type="submit" name="save-draft" value="Save as Draft">
             <input class="btn btn-success mx-2" type="submit" name="submit" value="Submit">
