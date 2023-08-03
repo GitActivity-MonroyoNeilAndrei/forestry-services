@@ -1,6 +1,12 @@
 <?php
 @include "../../database/config.php";
 session_start();
+
+// checks if the user is an ordinary user
+if(!isset($_SESSION['admin_username'])){
+  // if not go back to the index file or page
+  header('location: ../../login-register-account/login-client.php');
+}
 ?>
 
 <!DOCTYPE html>

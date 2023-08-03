@@ -20,6 +20,12 @@ date_default_timezone_set('Asia/Manila');
 
 session_start();
 
+// checks if the user is an ordinary user
+if (!isset($_SESSION['username'])) {
+  // if not go back to the index file or page
+  header('location: ../../login-register-account/login-client.php');
+}
+
 $name = "";
 $address = "";
 $purpose = "";

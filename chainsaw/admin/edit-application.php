@@ -7,6 +7,12 @@ date_default_timezone_set('Asia/Manila');
 
 session_start();
 
+// checks if the user is an ordinary user
+if (!isset($_SESSION['admin_username'])) {
+  // if not go back to the index file or page
+  header('location: ../../login-register-account/login-client.php');
+}
+
 if (isset($_GET['id'])) {
 
   $id = $_GET["id"];
@@ -55,49 +61,48 @@ if (isset($_POST['submit'])) {
 
 
 
-    // insert chainsaw receipt URL to the database
-    $img_name1 = $_FILES['chainsaw-official-receipt']['name'];
-    $img_size1 = $_FILES['chainsaw-official-receipt']['size'];
-    $tmp_name1 = $_FILES['chainsaw-official-receipt']['tmp_name'];
-    $error1 = $_FILES['chainsaw-official-receipt']['error'];
+  // insert chainsaw receipt URL to the database
+  $img_name1 = $_FILES['chainsaw-official-receipt']['name'];
+  $img_size1 = $_FILES['chainsaw-official-receipt']['size'];
+  $tmp_name1 = $_FILES['chainsaw-official-receipt']['tmp_name'];
+  $error1 = $_FILES['chainsaw-official-receipt']['error'];
 
-    // insert mayors permit URL to the database
-    $img_name2 = $_FILES['mayors-permit']['name'];
-    $img_size2 = $_FILES['mayors-permit']['size'];
-    $tmp_name2 = $_FILES['mayors-permit']['tmp_name'];
-    $error2 = $_FILES['mayors-permit']['error'];
+  // insert mayors permit URL to the database
+  $img_name2 = $_FILES['mayors-permit']['name'];
+  $img_size2 = $_FILES['mayors-permit']['size'];
+  $tmp_name2 = $_FILES['mayors-permit']['tmp_name'];
+  $error2 = $_FILES['mayors-permit']['error'];
 
-    if ($error1 === 0 && $error2 === 0) {
-      $img_ex1 = pathinfo($img_name1, PATHINFO_EXTENSION);
-      $img_ex_lc1 = strtolower($img_ex1);
+  if ($error1 === 0 && $error2 === 0) {
+    $img_ex1 = pathinfo($img_name1, PATHINFO_EXTENSION);
+    $img_ex_lc1 = strtolower($img_ex1);
 
-      $img_ex2 = pathinfo($img_name2, PATHINFO_EXTENSION);
-      $img_ex_lc2 = strtolower($img_ex2);
+    $img_ex2 = pathinfo($img_name2, PATHINFO_EXTENSION);
+    $img_ex_lc2 = strtolower($img_ex2);
 
-      $allowed_exs = array("jpg", "jpeg", "png");
+    $allowed_exs = array("jpg", "jpeg", "png");
 
-      if (in_array($img_ex_lc1, $allowed_exs) && in_array($img_ex_lc2, $allowed_exs)) {
-        $new_img_name1 = uniqid("IMG-", true) . '.' . $img_ex_lc1;
-        $new_img_name2 = uniqid("IMG-", true) . '.' . $img_ex_lc2;
+    if (in_array($img_ex_lc1, $allowed_exs) && in_array($img_ex_lc2, $allowed_exs)) {
+      $new_img_name1 = uniqid("IMG-", true) . '.' . $img_ex_lc1;
+      $new_img_name2 = uniqid("IMG-", true) . '.' . $img_ex_lc2;
 
-        $img_upload_path1 = '../uploads/' . $new_img_name1;
-        $img_upload_path2 = '../uploads/' . $new_img_name2;
+      $img_upload_path1 = '../uploads/' . $new_img_name1;
+      $img_upload_path2 = '../uploads/' . $new_img_name2;
 
-        move_uploaded_file($tmp_name1, $img_upload_path1);
-        move_uploaded_file($tmp_name2, $img_upload_path2);
-
-
-        $sql = "UPDATE registrations " . "SET name = '$name', address = '$address', purpose = '$purpose', chainsaw_receipt = '$new_img_name1', mayors_permit = '$new_img_name2', brand = '$brand', model = '$model', serial_no = '$serial_number', date_of_acquisition = '$date_of_acquisition', power_output = '$power_output', maximum_length_of_guidebar = '$maximum_length_of_guidebar', country_of_origin = '$country_of_origin', purchase_price = '$purchase_price', date_and_time_submitted = '$date_and_time_submitted', status = '$status' ". "WHERE registration_id = $id";
-        $result = $conn->query($sql);
+      move_uploaded_file($tmp_name1, $img_upload_path1);
+      move_uploaded_file($tmp_name2, $img_upload_path2);
 
 
-        header("location: list-of-applications.php");
-        exit();
-      } else {
-        $display_error = "You can't upload files of this type";
-      }
+      $sql = "UPDATE registrations " . "SET name = '$name', address = '$address', purpose = '$purpose', chainsaw_receipt = '$new_img_name1', mayors_permit = '$new_img_name2', brand = '$brand', model = '$model', serial_no = '$serial_number', date_of_acquisition = '$date_of_acquisition', power_output = '$power_output', maximum_length_of_guidebar = '$maximum_length_of_guidebar', country_of_origin = '$country_of_origin', purchase_price = '$purchase_price', date_and_time_submitted = '$date_and_time_submitted', status = '$status' " . "WHERE registration_id = $id";
+      $result = $conn->query($sql);
+
+
+      header("location: list-of-applications.php");
+      exit();
+    } else {
+      $display_error = "You can't upload files of this type";
     }
-  
+  }
 }
 
 ?>
@@ -114,7 +119,7 @@ if (isset($_POST['submit'])) {
   <title>Edit Application</title>
   <link rel="stylesheet" href="../../css/bootstrap.css?php echo time(); ?>">
   <link rel="stylesheet" href="../../css/reg-stat-mon.css?<?php echo time(); ?>">
-  
+
 </head>
 
 <body>

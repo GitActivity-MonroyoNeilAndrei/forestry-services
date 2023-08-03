@@ -1,6 +1,12 @@
 <?php
-  @include "../../database/config.php";
-  session_start();
+@include "../../database/config.php";
+session_start();
+
+// checks if the user is an ordinary user
+if (!isset($_SESSION['admin_username'])) {
+  // if not go back to the index file or page
+  header('location: ../../login-register-account/login-client.php');
+}
 
 ?>
 
@@ -12,7 +18,7 @@
 <head>
   <meta charset="UTF-8">
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
-  <meta  name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <link rel="icon" href="../../img/penro-logo.png">
   <link rel="stylesheet" href="style.css">
   <script defer src="script.js"></script>
@@ -41,13 +47,13 @@
     </div>
     <div class="page-content">
       <div class="nav-links">
-        <nav  style="position: sticky; top: 6vh;">
+        <nav style="position: sticky; top: 6vh;">
           <ul>
-          <li onclick="location.href='../../forestry-services-homepage-admin.php'">Home</li>
-          <li onclick="location.href='crude-clients.php'">List of Clients</li>
-          <li onclick="location.href='updating-of-application-form.php'">Accept Client Applications</li>
-          <li onclick="location.href='list-of-applications.php'">Generate Applications</li>
-          <li class="bg-dark-gray2"  onclick="location.href='release-applications.php'">Released Applications</li>
+            <li onclick="location.href='../../forestry-services-homepage-admin.php'">Home</li>
+            <li onclick="location.href='crude-clients.php'">List of Clients</li>
+            <li onclick="location.href='updating-of-application-form.php'">Accept Client Applications</li>
+            <li onclick="location.href='list-of-applications.php'">Generate Applications</li>
+            <li class="bg-dark-gray2" onclick="location.href='release-applications.php'">Released Applications</li>
 
           </ul>
         </nav>

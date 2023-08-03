@@ -1,46 +1,55 @@
 <?php
-  @include "../../database/config.php";
-  @include "../time.php";
-  session_start();
-
-  $date_and_time_today = $today['year'] .'-'. check_month($today['mon']) .'-'. check_day($today['mday']);
+@include "../../database/config.php";
+@include "../time.php";
+session_start();
 
 
-  if($conn->connect_error){
-    die("Connection Failed: ". $conn->connect_error);
-  }
+// checks if the user is an ordinary user
+if (!isset($_SESSION['admin_username'])) {
+  // if not go back to the index file or page
+  header('location: ../../login-register-account/login-client.php');
+}
 
-  if($_GET['status'] == 'accept'){
-    $update = "UPDATE ptpr_registrations SET status = 'accepted', date_and_time_accepted = '$date_and_time_today', remark = '', accepted_by = '$_SESSION[admin_username]' WHERE ptpr_registration_id = $_GET[id]";
+$date_and_time_today = $today['year'] . '-' . check_month($today['mon']) . '-' . check_day($today['mday']);
+
+
+if ($conn->connect_error) {
+  die("Connection Failed: " . $conn->connect_error);
+}
+
+if ($_GET['status'] == 'accept') {
+  $update = "UPDATE ptpr_registrations SET status = 'accepted', date_and_time_accepted = '$date_and_time_today', remark = '', accepted_by = '$_SESSION[admin_username]' WHERE ptpr_registration_id = $_GET[id]";
+  $result = $conn->query($update);
+  header("location: updating-of-application-form.php");
+} else if ($_GET['status'] == 'reject') {
+  if (isset($_POST['submit'])) {
+    $remark = mysqli_escape_string($conn, $_POST['remark']);
+
+
+    $update = "UPDATE ptpr_registrations SET status = 'rejected', date_and_time_returned = '$date_and_time_today', remark = '$remark', returned_by = '$_SESSION[admin_username]' WHERE ptpr_registration_id = $_GET[id]";
     $result = $conn->query($update);
     header("location: updating-of-application-form.php");
-  }else if ($_GET['status'] == 'reject') {
-    if(isset($_POST['submit'])){
-      $remark = mysqli_escape_string($conn, $_POST['remark']);
-
-
-      $update = "UPDATE ptpr_registrations SET status = 'rejected', date_and_time_returned = '$date_and_time_today', remark = '$remark', returned_by = '$_SESSION[admin_username]' WHERE ptpr_registration_id = $_GET[id]";
-      $result = $conn->query($update);
-      header("location: updating-of-application-form.php");
-    }
   }
-  
-  $conn->close();
+}
+
+$conn->close();
 
 ?>
 
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
   <meta charset="UTF-8">
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
-  <meta  name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <link rel="icon" href="../../img/penro-logo.png">
   <title>Update Application Status</title>
   <link rel="stylesheet" href="../../css/bootstrap.css?<?php echo time(); ?>">
   <script defer src="../../js/bootstrap.js"></script>
   <script defer src="../../js/script.js"></script>
 </head>
+
 <body>
   <div class="container">
     <form method="post" class="p-2 mx-auto border rounded mt-5 d-flex justify-content-center flex-column" style="max-width: 250px;">
@@ -50,4 +59,5 @@
     </form>
   </div>
 </body>
+
 </html>

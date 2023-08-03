@@ -1,6 +1,12 @@
 <?php
-  @include "../../database/config.php";
-  session_start();
+@include "../../database/config.php";
+session_start();
+
+// checks if the user is an ordinary user
+if (!isset($_SESSION['admin_username'])) {
+  // if not go back to the index file or page
+  header('location: ../../login-register-account/login-client.php');
+}
 
 ?>
 
@@ -41,14 +47,14 @@
     </div>
     <div class="page-content">
       <div class="nav-links">
-        <nav  style="position: sticky; top: 6vh;">
+        <nav style="position: sticky; top: 6vh;">
           <ul>
-          <li onclick="location.href='../../forestry-services-homepage-admin.php'">Home</li>
+            <li onclick="location.href='../../forestry-services-homepage-admin.php'">Home</li>
             <li onclick="location.href='crude-clients.php'">List of Clients</li>
             <li onclick="location.href='chainsaw-stores.php'">List of Chainsaw Stores</li>
             <li onclick="location.href='updating-of-application-form.php'">Accept Client Applications</li>
-          <li onclick="location.href='list-of-applications.php'">Generate Applications</li>
-          <li  class="bg-dark-gray2" onclick="location.href='release-applications.php'">Released Applications</li>
+            <li onclick="location.href='list-of-applications.php'">Generate Applications</li>
+            <li class="bg-dark-gray2" onclick="location.href='release-applications.php'">Released Applications</li>
 
           </ul>
         </nav>
