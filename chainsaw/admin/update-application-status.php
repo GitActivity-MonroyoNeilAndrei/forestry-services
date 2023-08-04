@@ -12,7 +12,7 @@ session_start();
   }
 
   if($_GET['status'] == 'accept'){
-    $update = "UPDATE registrations SET status = 'accepted', date_and_time_accepted = '$date_and_time_today', remark = '', validity_date = '$validity_date', accepted_by = '$_SESSION[username]' WHERE registration_id = $_GET[id]";
+    $update = "UPDATE registrations SET status = 'accepted', date_and_time_accepted = '$date_and_time_today', remark = '', validity_date = '$validity_date', accepted_by = '$_SESSION[admin_username]' WHERE registration_id = $_GET[id]";
     $result = $conn->query($update);
     header("location: updating-of-application-form.php");
   }else if ($_GET['status'] == 'reject') {
