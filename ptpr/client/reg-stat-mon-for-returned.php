@@ -104,7 +104,7 @@ if(!isset($_SESSION['username'])){
                     <td class='px-3'>$row[uploaded_requirements]</td>
                     <td class='px-3'>$row[remark]</td>
                     <td>
-                      <a class='btn btn-primary btn-sm' href='application-edit.php?id=$row[ptpr_registration_id]&status=return'>View and Edit</a>
+                      <a class='btn btn-primary btn-sm' href='application-edit.php?id=$row[ptpr_registration_id]&status=return'>Rework</a>
                     </td>
                   </tr>
                 ";

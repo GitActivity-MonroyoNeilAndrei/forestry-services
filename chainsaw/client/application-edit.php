@@ -166,6 +166,8 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
         $admin_username = $row['username'];
       }
 
+      if($new_img_name1)
+
 
       $sql = "UPDATE registrations " . "SET name = '$name', address = '$address', purpose = '$purpose', chainsaw_receipt = '$new_img_name1', mayors_permit = '$new_img_name2', brand = '$brand', model = '$model', serial_no = '$serial_number', date_of_acquisition = '$date_of_acquisition', power_output = '$power_output', maximum_length_of_guidebar = '$maximum_length_of_guidebar', country_of_origin = '$country_of_origin', purchase_price = '$purchase_price', chainsaw_store = '$chainsaw_store', received_by = '$admin_username' " . "WHERE registration_id = $id";
       $result = $conn->query($sql);
@@ -174,6 +176,8 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
     } else {
       $display_error = "You can't upload files of this type";
     }
+  } else {
+    $display_error = "You can't upload files of this type";
   }
 } else if (isset($_POST['submit'])) {
   $name = $_POST["name"];
@@ -275,6 +279,8 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
 
 
 
+
+
       $sql = "UPDATE registrations " . "SET name = '$name', address = '$address', purpose = '$purpose', chainsaw_receipt = '$new_img_name1', mayors_permit = '$new_img_name2', brand = '$brand', model = '$model', serial_no = '$serial_number', date_of_acquisition = '$date_of_acquisition', power_output = '$power_output', maximum_length_of_guidebar = '$maximum_length_of_guidebar', country_of_origin = '$country_of_origin', purchase_price = '$purchase_price', chainsaw_store = '$chainsaw_store', received_by = '$admin_username', date_and_time_submitted = '$date_and_time_submitted', status = '$status' " . "WHERE registration_id = $id";
       $result = $conn->query($sql);
 
@@ -282,6 +288,8 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
     } else {
       $display_error = "You can't upload files of this type";
     }
+  } else {
+    $display_error = "You can't upload files this type";
   }
 }
 ?>

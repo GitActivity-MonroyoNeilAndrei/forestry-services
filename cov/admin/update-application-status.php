@@ -1,6 +1,13 @@
 <?php
+  session_start();
   @include "../../database/config.php";
   @include "../time.php";
+
+  // checks if the user is an ordinary user
+if (!isset($_SESSION['admin_username'])) {
+  // if not go back to the index file or page
+  header('location: ../../login-register-account/login-client.php');
+}
   
 
   $date_and_time_today = $today['year'] .'-'. check_month($today['mon']) .'-'. check_day($today['mday']);
@@ -11,11 +18,16 @@
   }
 
   if($_GET['status'] == 'accept'){
-    $update = "UPDATE cov_registrations SET status = 'accepted', date_and_time_accepted = '$date_and_time_today', remark = '', validity_date = '$validity_date' WHERE cov_registration_id = $_GET[id]";
+    if(isset($_POST['submit'])) {
+      $amount = $_POST['amount'];
+
+      $update = "UPDATE cov_registrations SET status = 'accepted', date_and_time_accepted = '$date_and_time_today', remark = '', validity_date = '$validity_date', amount_to_pay = '$amount' WHERE cov_registration_id = $_GET[id]";
     $result = $conn->query($update);
     header("location: updating-of-application-form.php");
+    }
+    
   }else if ($_GET['status'] == 'reject') {
-    if(isset($_POST['submit'])){
+    if(isset($_POST['submit2'])){
       $remark = mysqli_escape_string($conn, $_POST['remark']);
 
 
@@ -40,14 +52,27 @@
   <link rel="stylesheet" href="../../css/bootstrap.css?<?php echo time(); ?>">
   <script defer src="../../js/bootstrap.js"></script>
   <script defer src="../../js/script.js"></script>
+
 </head>
 <body>
-  <div class="container">
+
+
+  <div class="container" style="display: <?php if ($_GET['status'] != 'accept') {echo 'none !important';} ?>">
     <form method="post" class="p-2 mx-auto border rounded mt-5 d-flex justify-content-center flex-column" style="max-width: 250px;">
-      <label class="text-center" for="remark">Add Remark to this Applications</label>
-      <input class="mt-4" style="width: 100%;" type="text" name="remark">
+      <label class="text-center" for="remark">Add Amount to Pay</label>
+      <input class="mt-4" style="width: 100%;" type="number" name="amount">
       <input class="btn btn-primary mt-3" type="submit" name="submit" value="Submit">
     </form>
   </div>
+
+  <div class="container" style="display: <?php if ($_GET['status'] != 'reject') {echo 'none !important';} ?>;">
+    <form method="post" class="p-2 mx-auto border rounded mt-5 d-flex justify-content-center flex-column" style="max-width: 250px;">
+      <label class="text-center" for="remark">Add Remark to this Applications</label>
+      <input class="mt-4" style="width: 100%;" type="text" name="remark">
+      <input class="btn btn-primary mt-3" type="submit" name="submit2" value="Submit">
+    </form>
+  </div>
+
+
 </body>
 </html>

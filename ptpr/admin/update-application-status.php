@@ -1,7 +1,7 @@
 <?php
+session_start();
 @include "../../database/config.php";
 @include "../time.php";
-session_start();
 
 
 // checks if the user is an ordinary user
@@ -18,11 +18,15 @@ if ($conn->connect_error) {
 }
 
 if ($_GET['status'] == 'accept') {
-  $update = "UPDATE ptpr_registrations SET status = 'accepted', date_and_time_accepted = '$date_and_time_today', remark = '', accepted_by = '$_SESSION[admin_username]' WHERE ptpr_registration_id = $_GET[id]";
-  $result = $conn->query($update);
-  header("location: updating-of-application-form.php");
-} else if ($_GET['status'] == 'reject') {
   if (isset($_POST['submit'])) {
+    $amount = $_POST['amount'];
+
+    $update = "UPDATE ptpr_registrations SET status = 'accepted', date_and_time_accepted = '$date_and_time_today', remark = '', accepted_by = '$_SESSION[admin_username]' WHERE ptpr_registration_id = $_GET[id]";
+    $result = $conn->query($update);
+    header("location: updating-of-application-form.php");
+  }
+} else if ($_GET['status'] == 'reject') {
+  if (isset($_POST['submit2'])) {
     $remark = mysqli_escape_string($conn, $_POST['remark']);
 
 
@@ -31,6 +35,7 @@ if ($_GET['status'] == 'accept') {
     header("location: updating-of-application-form.php");
   }
 }
+
 
 $conn->close();
 
@@ -51,11 +56,21 @@ $conn->close();
 </head>
 
 <body>
-  <div class="container">
+
+  <div class="container" style="display: <?php if ($_GET['status'] != 'accept') {echo 'none';} ?>;">
+    <form method="post" class="p-2 mx-auto border rounded mt-5 d-flex justify-content-center flex-column" style="max-width: 250px;">
+      <label class="text-center" for="remark">Add Amount to Pay</label>
+      <input class="mt-4" style="width: 100%;" type="number" name="amount">
+      <input class="btn btn-primary mt-3" type="submit" name="submit" value="Submit">
+    </form>
+  </div>
+
+
+  <div class="container" style="display: <?php if ($_GET['status'] != 'reject') {echo 'none';} ?>;">
     <form method="post" class="p-2 mx-auto border rounded mt-5 d-flex justify-content-center flex-column" style="max-width: 250px;">
       <label class="text-center" for="remark">Add Remark to this Applications</label>
       <input class="mt-4" style="width: 100%;" type="text" name="remark">
-      <input class="btn btn-primary mt-3" type="submit" name="submit" value="Submit">
+      <input class="btn btn-primary mt-3" type="submit" name="submit2" value="Submit">
     </form>
   </div>
 </body>

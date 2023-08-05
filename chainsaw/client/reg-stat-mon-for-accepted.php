@@ -75,6 +75,7 @@ if (!isset($_SESSION['username'])) {
                   <th>Date and Time Updated (yyyy-mm-dd)</th>
                   <th>Date and Time Accepted (yyyy-mm-dd)</th>
                   <th>Uploaded Requirements</th>
+                  <th>Amount to Pay</th>
                   <th>Action</th>
                 </tr>
               </thead>
@@ -100,6 +101,7 @@ if (!isset($_SESSION['username'])) {
                     <td class='px-3'>$row[date_and_time_updated]</td>
                     <td class='px-3'>$row[date_and_time_accepted]</td>
                     <td class='px-3'>$row[uploaded_requirements]</td>
+                    <td class='px-3'>$row[amount_to_pay]</td>
                     <td class='text-center'>
                       <a class='btn btn-primary btn-sm' href='view-submitted-application.php?id=$row[registration_id]&status=accepted'>View</a>
                     </td>

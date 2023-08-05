@@ -17,8 +17,9 @@ if(!isset($_SESSION['username'])){
   <meta charset="UTF-8">
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="icon" href="../../img/penro-logo.png">
   <title>Application for Returned</title>
-  <link rel="stylesheet" href="../../css/bootstrap.css?php echo time(); ?>">
+  <link rel="stylesheet" href="../../css/bootstrap.css?<?php echo time(); ?>">
   <link rel="stylesheet" href="../../css/reg-stat-mon.css?<?php echo time(); ?>">
 </head>
 
@@ -103,7 +104,7 @@ if(!isset($_SESSION['username'])){
                     <td class='px-3'>$row[uploaded_requirements]</td>
                     <td class='px-3'>$row[remark]</td>
                     <td>
-                      <a class='btn btn-primary btn-sm' href='application-edit.php?id=$row[cov_registration_id]&status=return'>View and Edit</a>
+                      <a class='btn btn-primary btn-sm' href='application-edit.php?id=$row[cov_registration_id]&status=return'>Rework</a>
                     </td>
                   </tr>
                 ";
