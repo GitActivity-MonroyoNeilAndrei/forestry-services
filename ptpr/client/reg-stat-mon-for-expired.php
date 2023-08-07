@@ -1,6 +1,8 @@
 
 <?php
 @include '../../database/config.php';
+@include '../../check-expiration.php';
+
 
 session_start();
 

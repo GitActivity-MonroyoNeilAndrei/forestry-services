@@ -2,6 +2,8 @@
 
 @include '../../database/config.php';
 @include "../time.php";
+@include "../../upload-data.php";
+
 
 date_default_timezone_set('Asia/Manila');
 
@@ -60,49 +62,43 @@ if (isset($_POST['submit'])) {
 
 
 
+  $can_upload_official_receipt = false;
+  $can_upload_mayors_permit = false;
+  $no_error = true;
 
-  // insert chainsaw receipt URL to the database
-  $img_name1 = $_FILES['chainsaw-official-receipt']['name'];
-  $img_size1 = $_FILES['chainsaw-official-receipt']['size'];
-  $tmp_name1 = $_FILES['chainsaw-official-receipt']['tmp_name'];
-  $error1 = $_FILES['chainsaw-official-receipt']['error'];
-
-  // insert mayors permit URL to the database
-  $img_name2 = $_FILES['mayors-permit']['name'];
-  $img_size2 = $_FILES['mayors-permit']['size'];
-  $tmp_name2 = $_FILES['mayors-permit']['tmp_name'];
-  $error2 = $_FILES['mayors-permit']['error'];
-
-  if ($error1 === 0 && $error2 === 0) {
-    $img_ex1 = pathinfo($img_name1, PATHINFO_EXTENSION);
-    $img_ex_lc1 = strtolower($img_ex1);
-
-    $img_ex2 = pathinfo($img_name2, PATHINFO_EXTENSION);
-    $img_ex_lc2 = strtolower($img_ex2);
-
-    $allowed_exs = array("jpg", "jpeg", "png");
-
-    if (in_array($img_ex_lc1, $allowed_exs) && in_array($img_ex_lc2, $allowed_exs)) {
-      $new_img_name1 = uniqid("IMG-", true) . '.' . $img_ex_lc1;
-      $new_img_name2 = uniqid("IMG-", true) . '.' . $img_ex_lc2;
-
-      $img_upload_path1 = '../uploads/' . $new_img_name1;
-      $img_upload_path2 = '../uploads/' . $new_img_name2;
-
-      move_uploaded_file($tmp_name1, $img_upload_path1);
-      move_uploaded_file($tmp_name2, $img_upload_path2);
-
-
-      $sql = "UPDATE registrations " . "SET name = '$name', address = '$address', purpose = '$purpose', chainsaw_receipt = '$new_img_name1', mayors_permit = '$new_img_name2', brand = '$brand', model = '$model', serial_no = '$serial_number', date_of_acquisition = '$date_of_acquisition', power_output = '$power_output', maximum_length_of_guidebar = '$maximum_length_of_guidebar', country_of_origin = '$country_of_origin', purchase_price = '$purchase_price', date_and_time_submitted = '$date_and_time_submitted', status = '$status' " . "WHERE registration_id = $id";
-      $result = $conn->query($sql);
-
-
-      header("location: list-of-applications.php");
-      exit();
-    } else {
+    
+  if(!fileIsEmpty('chainsaw-official-receipt')) {    // there's a file uploaded
+    if(!fileIsImage('chainsaw-official-receipt')) {  // it is not a image
       $display_error = "You can't upload files of this type";
+      $no_error = false;
+    } else {
+      $can_upload_official_receipt = true;
+    }
+  } else if (!fileIsEmpty('mayors-permit')){         // there's a file uploaded
+    if(!fileIsImage('mayors-permit')) {  // it is not a image
+      $display_error2 = "You can't upload files of this type";
+      $no_error = false;
+    } else {
+      $can_upload_mayors_permit = true;
     }
   }
+
+  if($can_upload_official_receipt) { // there's a file uploaded
+    updateImage('chainsaw-official-receipt', $conn, 'registrations', 'chainsaw_receipt', '../uploads/', ['registration_id', $id]);
+  }
+  if($can_upload_mayors_permit) {   // there's a file uploaded
+    updateImage('mayors-permit', $conn, 'registrations', 'mayors_permit', '../uploads/', ['registration_id', $id]);
+  }
+
+  if($no_error) {
+    $sql = "UPDATE registrations " . "SET name = '$name', address = '$address', purpose = '$purpose', brand = '$brand', model = '$model', serial_no = '$serial_number', date_of_acquisition = '$date_of_acquisition', power_output = '$power_output', maximum_length_of_guidebar = '$maximum_length_of_guidebar', country_of_origin = '$country_of_origin', purchase_price = '$purchase_price', date_and_time_submitted = '$date_and_time_submitted', status = '$status' " . "WHERE registration_id = $id";
+    $result = $conn->query($sql);
+
+
+    header("location: list-of-applications.php");
+  }
+
+
 }
 
 ?>
@@ -191,7 +187,7 @@ if (isset($_POST['submit'])) {
               }
               ?>
               <div class="d-flex flex-column">
-                <input type="file" class="form-control" for="input-chainsaw-receipt" name="chainsaw-official-receipt" required>
+                <input type="file" class="form-control" for="input-chainsaw-receipt" name="chainsaw-official-receipt">
               </div>
               <!-- mayor's permit -->
               <label class="form-label mt-2" for="upload-chainsaw-official-receipt">Upload Mayor's Permit</label>
@@ -211,16 +207,16 @@ if (isset($_POST['submit'])) {
               }
               ?>
               <?php
-              if (isset($display_error)) {
+              if (isset($display_error2)) {
                 echo '
                 <div class="alert alert-danger" role="alert">
-                ' . $display_error . '
+                ' . $display_error2 . '
                 </div>
                 ';
               }
               ?>
               <div class="d-flex flex-column">
-                <input type="file" class="form-control" for="input-mayors-permit" name="mayors-permit" required>
+                <input type="file" class="form-control" for="input-mayors-permit" name="mayors-permit">
               </div>
             </div>
 
@@ -261,7 +257,7 @@ if (isset($_POST['submit'])) {
                 </div>
                 <div class="text-center mt-4">
                   <input class="btn btn-success mx-2" type="submit" name="submit" value="Submit">
-                  <button class="btn btn-danger mx-2" onclick="history.back();">Cancel</button>
+                  <button class="btn btn-danger mx-2" type="button" onclick="location.href='list-of-applications.php'">Cancel</button>
                 </div>
             </div>
           </form>

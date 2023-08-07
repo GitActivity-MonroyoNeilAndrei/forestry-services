@@ -2,6 +2,8 @@
 
 @include '../../database/config.php';
 @include "../time.php";
+@include "../../upload-data.php";
+
 
 session_start();
 
@@ -55,49 +57,40 @@ if (isset($_POST['submit'])) {
   $date_and_time_submitted = $today['year'] . '-' . check_month($today['mon']) . '-' . check_day($today['mday']);
 
 
+  $can_upload_official_receipt = false;
+  $can_upload_mayors_permit = false;
+  $no_error = true;
 
 
-  // insert chainsaw receipt URL to the database
-  $img_name1 = $_FILES['tax-declaration']['name'];
-  $img_size1 = $_FILES['tax-declaration']['size'];
-  $tmp_name1 = $_FILES['tax-declaration']['tmp_name'];
-  $error1 = $_FILES['tax-declaration']['error'];
-
-  // insert mayors permit URL to the database
-  $img_name2 = $_FILES['special-power-of-attorney']['name'];
-  $img_size2 = $_FILES['special-power-of-attorney']['size'];
-  $tmp_name2 = $_FILES['special-power-of-attorney']['tmp_name'];
-  $error2 = $_FILES['special-power-of-attorney']['error'];
-
-  if ($error1 === 0 && $error2 === 0) {
-    $img_ex1 = pathinfo($img_name1, PATHINFO_EXTENSION);
-    $img_ex_lc1 = strtolower($img_ex1);
-
-    $img_ex2 = pathinfo($img_name2, PATHINFO_EXTENSION);
-    $img_ex_lc2 = strtolower($img_ex2);
-
-    $allowed_exs = array("jpg", "jpeg", "png");
-
-    if (in_array($img_ex_lc1, $allowed_exs) && in_array($img_ex_lc2, $allowed_exs)) {
-      $new_img_name1 = uniqid("IMG-", true) . '.' . $img_ex_lc1;
-      $new_img_name2 = uniqid("IMG-", true) . '.' . $img_ex_lc2;
-
-      $img_upload_path1 = '../uploads/' . $new_img_name1;
-      $img_upload_path2 = '../uploads/' . $new_img_name2;
-
-      move_uploaded_file($tmp_name1, $img_upload_path1);
-      move_uploaded_file($tmp_name2, $img_upload_path2);
-
-
-      $sql = "UPDATE ptpr_registrations " . "SET name = '$name', address = '$address', purpose = '$purpose', tax_declaration = '$new_img_name1', special_power_of_attorney = '$new_img_name2', tax_declaration_number = '$tax_declaration_number', barangay = '$barangay', municipality = '$municipality', province = '$province', total_lot_area = '$total_lot_area', area_devoted_to_plantation = '$area_devoted_to_plantation', species = '$species', number_of_trees = '$number_of_trees'  " . "WHERE ptpr_registration_id = $id";
-      $result = $conn->query($sql);
-
-
-      header("location: list-of-applications.php");
-      exit();
-    } else {
+  if (!fileIsEmpty('tax-declaration')) {    // there's a file uploaded
+    if (!fileIsImage('tax-declaration')) {  // it is not a image
       $display_error = "You can't upload files of this type";
+      $no_error = false;
+    } else {
+      $can_upload_official_receipt = true;
     }
+  } else if (!fileIsEmpty('special-power-of-attorney')) {         // there's a file uploaded
+    if (!fileIsImage('special-power-of-attorney')) {  // it is not a image
+      $display_error2 = "You can't upload files of this type";
+      $no_error = false;
+    } else {
+      $can_upload_mayors_permit = true;
+    }
+  }
+
+  if ($can_upload_official_receipt) { // there's a file uploaded
+    updateImage('tax-declaration', $conn, 'ptpr_registrations', 'tax_declaration', '../uploads/', ['ptpr_registration_id', $id]);
+  }
+  if ($can_upload_mayors_permit) {   // there's a file uploaded
+    updateImage('special-power-of-attorney', $conn, 'ptpr_registrations', 'special_power_of_attorney', '../uploads/', ['ptpr_registration_id', $id]);
+  }
+
+  if ($no_error) {
+    $sql = "UPDATE ptpr_registrations " . "SET name = '$name', address = '$address', purpose = '$purpose', tax_declaration_number = '$tax_declaration_number', barangay = '$barangay', municipality = '$municipality', province = '$province', total_lot_area = '$total_lot_area', area_devoted_to_plantation = '$area_devoted_to_plantation', species = '$species', number_of_trees = '$number_of_trees'  " . "WHERE ptpr_registration_id = $id";
+    $result = $conn->query($sql);
+
+
+    header("location: list-of-applications.php");
   }
 }
 
@@ -190,10 +183,20 @@ if (isset($_POST['submit'])) {
 
 
               <div class="d-flex flex-column">
-                <input type="file" class="form-control" name="tax-declaration" required>
+                <input type="file" class="form-control" name="tax-declaration">
               </div>
               <!-- mayor's permit -->
               <label class="form-label mt-2">Upload Special Power of Attorney</label>
+
+              <?php
+              if (isset($display_error2)) {
+                echo '
+                <div class="alert alert-danger" role="alert">
+                ' . $display_error2 . '
+                </div>
+                ';
+              }
+              ?>
               <?php
               $sql1 = "SELECT * FROM ptpr_registrations WHERE ptpr_registration_id = $id";
               $res = $conn->query($sql1);
@@ -210,7 +213,7 @@ if (isset($_POST['submit'])) {
               ?>
 
               <div class="d-flex flex-column">
-                <input type="file" class="form-control" name="special-power-of-attorney" required>
+                <input type="file" class="form-control" name="special-power-of-attorney">
               </div>
             </div>
 
@@ -261,6 +264,7 @@ if (isset($_POST['submit'])) {
 
                   <div class="text-center mt-4">
                     <input class="btn btn-success mx-2" type="submit" name="submit" value="Edit">
+                    <button class="btn btn-danger mx-2" type="button"  onclick="location.href='list-of-applications.php'">Cancel</button>
                   </div>
             </div>
           </form>

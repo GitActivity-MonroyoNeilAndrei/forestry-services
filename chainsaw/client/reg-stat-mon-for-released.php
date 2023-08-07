@@ -1,5 +1,6 @@
 <?php
 @include '../../database/config.php';
+@include "../../check-expiration.php";
 
 session_start();
 
@@ -49,7 +50,6 @@ if (!isset($_SESSION['username'])) {
             <li onclick="location.href='../../forestry-services-homepage.php'">Home</li>
             <li onclick="location.href='chainsaw-homepage.php'">Dashboard</li>
             <li onclick="location.href='application-for-new-registration.php'">Application for New Registration</li>
-            <li onclick="location.href='verification-for-renewal.php'">Application for Renewal</li>
             <li class="nav-link-active" onclick="location.href='reg-stat-mon-for-draft.php'">Registration Status Monitoring</li>
           </ul>
         </nav>
@@ -111,7 +111,7 @@ if (!isset($_SESSION['username'])) {
                     <td class='px-3'>$row[accepted_by]</td>
                     <td class='px-3'><a class='btn btn-success' href='view-pdf-file.php?doc=$row[documents]' target='_blank'>View</a></td>
                     <td>
-                    <a class='btn btn-primary btn-sm' href='view-submitted-application.php?id=$row[registration_id]&status=submitted'>View</a>
+                    <a class='btn btn-primary btn-sm' href='view-submitted-application.php?id=$row[registration_id]&status=released'>View</a>
                     </td>
                   </tr>
                 ";

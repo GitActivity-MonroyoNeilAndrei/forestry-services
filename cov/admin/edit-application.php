@@ -63,47 +63,40 @@ if (isset($_POST['submit'])) {
 
 
 
-  // insert chainsaw receipt URL to the database
-  $img_name1 = $_FILES['pltp']['name'];
-  $img_size1 = $_FILES['pltp']['size'];
-  $tmp_name1 = $_FILES['pltp']['tmp_name'];
-  $error1 = $_FILES['pltp']['error'];
-
-  // insert mayors permit URL to the database
-  $img_name2 = $_FILES['vehicle-information']['name'];
-  $img_size2 = $_FILES['vehicle-information']['size'];
-  $tmp_name2 = $_FILES['vehicle-information']['tmp_name'];
-  $error2 = $_FILES['vehicle-information']['error'];
-
-  if ($error1 === 0 && $error2 === 0) {
-    $img_ex1 = pathinfo($img_name1, PATHINFO_EXTENSION);
-    $img_ex_lc1 = strtolower($img_ex1);
-
-    $img_ex2 = pathinfo($img_name2, PATHINFO_EXTENSION);
-    $img_ex_lc2 = strtolower($img_ex2);
-
-    $allowed_exs = array("jpg", "jpeg", "png");
-
-    if (in_array($img_ex_lc1, $allowed_exs) && in_array($img_ex_lc2, $allowed_exs)) {
-      $new_img_name1 = uniqid("IMG-", true) . '.' . $img_ex_lc1;
-      $new_img_name2 = uniqid("IMG-", true) . '.' . $img_ex_lc2;
-
-      $img_upload_path1 = '../uploads/' . $new_img_name1;
-      $img_upload_path2 = '../uploads/' . $new_img_name2;
-
-      move_uploaded_file($tmp_name1, $img_upload_path1);
-      move_uploaded_file($tmp_name2, $img_upload_path2);
+  $can_upload_official_receipt = false;
+  $can_upload_mayors_permit = false;
+  $no_error = true;
 
 
-      $sql = "UPDATE cov_registrations " . "SET name = '$name', address = '$address', purpose = '$purpose', pltp = '$new_img_name1', vehicle_information = '$new_img_name2', location_from = '$location_from', location_to = '$location_to', species = '$species', number_of_trees = '$number_of_trees', gross_volume = '$gross_volume', net_volume = '$net_volume', drivers_name = '$drivers_name', or_number = '$or_number', plate_number = '$plate_number', date_and_time_submitted = '$date_and_time_submitted', status = '$status' " . "WHERE cov_registration_id = $id";
-      $result = $conn->query($sql);
-
-
-      header("location: list-of-applications.php");
-      exit();
-    } else {
+  if (!fileIsEmpty('pltp')) {    // there's a file uploaded
+    if (!fileIsImage('pltp')) {  // it is not a image
       $display_error = "You can't upload files of this type";
+      $no_error = false;
+    } else {
+      $can_upload_official_receipt = true;
     }
+  } else if (!fileIsEmpty('vehicle-information')) {         // there's a file uploaded
+    if (!fileIsImage('vehicle-information')) {  // it is not a image
+      $display_error2 = "You can't upload files of this type";
+      $no_error = false;
+    } else {
+      $can_upload_mayors_permit = true;
+    }
+  }
+
+  if ($can_upload_official_receipt) { // there's a file uploaded
+    updateImage('pltp', $conn, 'cov_registrations', 'pltp', '../uploads/', ['cov_registration_id', $id]);
+  }
+  if ($can_upload_mayors_permit) {   // there's a file uploaded
+    updateImage('vehicle-information', $conn, 'cov_registrations', 'vehicle_information', '../uploads/', ['cov_registration_id', $id]);
+  }
+
+  if ($no_error) {
+    $sql = "UPDATE registrations " . "SET name = '$name', address = '$address', purpose = '$purpose', brand = '$brand', model = '$model', serial_no = '$serial_number', date_of_acquisition = '$date_of_acquisition', power_output = '$power_output', maximum_length_of_guidebar = '$maximum_length_of_guidebar', country_of_origin = '$country_of_origin', purchase_price = '$purchase_price', date_and_time_submitted = '$date_and_time_submitted', status = '$status' " . "WHERE registration_id = $id";
+    $result = $conn->query($sql);
+
+
+    header("location: list-of-applications.php");
   }
 }
 
@@ -272,6 +265,8 @@ if (isset($_POST['submit'])) {
                     </div>
                     <div class="text-center mt-4">
                       <input class="btn btn-success mx-2" type="submit" name="submit" value="Submit">
+                      <button class="btn btn-danger mx-2" type="button"  onclick="location.href='list-of-applications.php'">Cancel</button>
+
                     </div>
             </div>
           </form>

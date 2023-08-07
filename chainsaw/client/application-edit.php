@@ -2,6 +2,7 @@
 
 @include "../../database/config.php";
 @include "../time.php";
+@include "../../upload-data.php";
 
 
 $url_status = "";
@@ -90,95 +91,41 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
 
   $id = $_GET["id"];
 
-  // insert chainsaw receipt URL to the database
-  $img_name1 = $_FILES['chainsaw-official-receipt']['name'];
-  $img_size1 = $_FILES['chainsaw-official-receipt']['size'];
-  $tmp_name1 = $_FILES['chainsaw-official-receipt']['tmp_name'];
-  $error1 = $_FILES['chainsaw-official-receipt']['error'];
+  $can_upload_official_receipt = false;
+  $can_upload_mayors_permit = false;
+  $no_error = true;
 
-  // insert mayors permit URL to the database
-  $img_name2 = $_FILES['mayors-permit']['name'];
-  $img_size2 = $_FILES['mayors-permit']['size'];
-  $tmp_name2 = $_FILES['mayors-permit']['tmp_name'];
-  $error2 = $_FILES['mayors-permit']['error'];
-
-  if ($error1 === 0 && $error2 === 0) {
-    $img_ex1 = pathinfo($img_name1, PATHINFO_EXTENSION);
-    $img_ex_lc1 = strtolower($img_ex1);
-
-    $img_ex2 = pathinfo($img_name2, PATHINFO_EXTENSION);
-    $img_ex_lc2 = strtolower($img_ex2);
-
-    $allowed_exs = array("jpg", "jpeg", "png");
-
-    if (in_array($img_ex_lc1, $allowed_exs) && in_array($img_ex_lc2, $allowed_exs)) {
-      $new_img_name1 = uniqid("IMG-", true) . '.' . $img_ex_lc1;
-      $new_img_name2 = uniqid("IMG-", true) . '.' . $img_ex_lc2;
-
-      $img_upload_path1 = '../uploads/' . $new_img_name1;
-      $img_upload_path2 = '../uploads/' . $new_img_name2;
-
-      move_uploaded_file($tmp_name1, $img_upload_path1);
-      move_uploaded_file($tmp_name2, $img_upload_path2);
-
-      // execute the sql  query in the database
-      $select = "SELECT * FROM registrations WHERE registration_id = $id";
-      $check = $conn->query($select);
-
-
-
-      while ($row = $check->fetch_assoc()) {
-        unlink("../uploads/" . $row['chainsaw_receipt']);
-        unlink("../uploads/" . $row['mayors_permit']);
-      }
-
-      // get the minimum submission by an admin
-      // ----------------------------
-      $sql = "SELECT * FROM admins";
-      $admin_results = $conn->query($sql);
-
-      if (!$admin_results) {
-        die("Invalid query: " . $conn->error);
-      }
-
-      while ($row = $admin_results->fetch_assoc()) {
-        array_push($admins_no_of_submissions, $row['number_of_submissions']);
-        array_push($admins_id, $row['id']);
-      }
-
-
-      $mins = array_keys($admins_no_of_submissions, min($admins_no_of_submissions));
-      $lowest_admin_id = $admins_id[$mins[0]];
-
-
-      // ---------------------------
-
-      // get the admins id with the lowest submission
-
-      $check = "SELECT * FROM admins WHERE id = $lowest_admin_id";
-      $lowest_result = $conn->query($check);
-
-      if (!$lowest_result) {
-        die("Invalid Query: " . $conn->error);
-      }
-
-      while ($row = $lowest_result->fetch_assoc()) {
-        $admin_username = $row['username'];
-      }
-
-      if($new_img_name1)
-
-
-      $sql = "UPDATE registrations " . "SET name = '$name', address = '$address', purpose = '$purpose', chainsaw_receipt = '$new_img_name1', mayors_permit = '$new_img_name2', brand = '$brand', model = '$model', serial_no = '$serial_number', date_of_acquisition = '$date_of_acquisition', power_output = '$power_output', maximum_length_of_guidebar = '$maximum_length_of_guidebar', country_of_origin = '$country_of_origin', purchase_price = '$purchase_price', chainsaw_store = '$chainsaw_store', received_by = '$admin_username' " . "WHERE registration_id = $id";
-      $result = $conn->query($sql);
-
-      header("location: reg-stat-mon-for-draft.php");
-    } else {
+    
+  if(!fileIsEmpty('chainsaw-official-receipt')) {    // there's a file uploaded
+    if(!fileIsImage('chainsaw-official-receipt')) {  // it is not a image
       $display_error = "You can't upload files of this type";
+      $no_error = false;
+    } else {
+      $can_upload_official_receipt = true;
     }
-  } else {
-    $display_error = "You can't upload files of this type";
+  } else if (!fileIsEmpty('mayors-permit')){         // there's a file uploaded
+    if(!fileIsImage('mayors-permit')) {  // it is not a image
+      $display_error2 = "You can't upload files of this type";
+      $no_error = false;
+    } else {
+      $can_upload_mayors_permit = true;
+    }
   }
+
+  if($can_upload_official_receipt) { // there's a file uploaded
+    updateImage('chainsaw-official-receipt', $conn, 'registrations', 'chainsaw_receipt', '../uploads/', ['registration_id', $id]);
+  }
+  if($can_upload_mayors_permit) {   // there's a file uploaded
+    updateImage('mayors-permit', $conn, 'registrations', 'mayors_permit', '../uploads/', ['registration_id', $id]);
+  }
+
+  if($no_error) {
+    $sql = "UPDATE registrations " . "SET name = '$name', address = '$address', purpose = '$purpose', brand = '$brand', model = '$model', serial_no = '$serial_number', date_of_acquisition = '$date_of_acquisition', power_output = '$power_output', maximum_length_of_guidebar = '$maximum_length_of_guidebar', country_of_origin = '$country_of_origin', purchase_price = '$purchase_price', chainsaw_store = '$chainsaw_store', date_and_time_submitted = '$date_and_time_submitted', status = 'for-draft' " . "WHERE registration_id = $id";
+    $result = $conn->query($sql);
+
+    header("location: reg-stat-mon-for-draft.php");
+  }
+
 } else if (isset($_POST['submit'])) {
   $name = $_POST["name"];
   $address = $_POST["address"];
@@ -198,99 +145,42 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
 
   $id = $_GET["id"];
 
-  // insert chainsaw receipt URL to the database
-  $img_name1 = $_FILES['chainsaw-official-receipt']['name'];
-  $img_size1 = $_FILES['chainsaw-official-receipt']['size'];
-  $tmp_name1 = $_FILES['chainsaw-official-receipt']['tmp_name'];
-  $error1 = $_FILES['chainsaw-official-receipt']['error'];
 
-  // insert mayors permit URL to the database
-  $img_name2 = $_FILES['mayors-permit']['name'];
-  $img_size2 = $_FILES['mayors-permit']['size'];
-  $tmp_name2 = $_FILES['mayors-permit']['tmp_name'];
-  $error2 = $_FILES['mayors-permit']['error'];
+  $can_upload_official_receipt = false;
+  $can_upload_mayors_permit = false;
+  $no_error = true;
 
-
-
-  if ($error1 === 0 && $error2 === 0) {
-    $img_ex1 = pathinfo($img_name1, PATHINFO_EXTENSION);
-    $img_ex_lc1 = strtolower($img_ex1);
-
-    $img_ex2 = pathinfo($img_name2, PATHINFO_EXTENSION);
-    $img_ex_lc2 = strtolower($img_ex2);
-
-    $allowed_exs = array("jpg", "jpeg", "png");
-
-    if (in_array($img_ex_lc1, $allowed_exs) && in_array($img_ex_lc2, $allowed_exs)) {
-      $new_img_name1 = uniqid("IMG-", true) . '.' . $img_ex_lc1;
-      $new_img_name2 = uniqid("IMG-", true) . '.' . $img_ex_lc2;
-
-      $img_upload_path1 = '../uploads/' . $new_img_name1;
-      $img_upload_path2 = '../uploads/' . $new_img_name2;
-
-      move_uploaded_file($tmp_name1, $img_upload_path1);
-      move_uploaded_file($tmp_name2, $img_upload_path2);
-
-      // execute the sql  query in the database
-      $select = "SELECT * FROM registrations WHERE registration_id = $id";
-      $check = $conn->query($select);
-
-
-
-      while ($row = $check->fetch_assoc()) {
-        unlink("../uploads/" . $row['chainsaw_receipt']);
-        unlink("../uploads/" . $row['mayors_permit']);
-      }
-
-      // get the minimum submission by an admin
-      // ----------------------------
-      $sql = "SELECT * FROM admins";
-      $admin_results = $conn->query($sql);
-
-      if (!$admin_results) {
-        die("Invalid query: " . $conn->error);
-      }
-
-      while ($row = $admin_results->fetch_assoc()) {
-        array_push($admins_no_of_submissions, $row['number_of_submissions']);
-        array_push($admins_id, $row['id']);
-      }
-
-
-      $mins = array_keys($admins_no_of_submissions, min($admins_no_of_submissions));
-      $lowest_admin_id = $admins_id[$mins[0]];
-
-
-      // ---------------------------
-
-      // get the admins id with the lowest submission
-
-      $check = "SELECT * FROM admins WHERE id = $lowest_admin_id";
-      $lowest_result = $conn->query($check);
-
-      if (!$lowest_result) {
-        die("Invalid Query: " . $conn->error);
-      }
-
-      while ($row = $lowest_result->fetch_assoc()) {
-        $admin_username = $row['username'];
-      }
-
-
-
-
-
-
-      $sql = "UPDATE registrations " . "SET name = '$name', address = '$address', purpose = '$purpose', chainsaw_receipt = '$new_img_name1', mayors_permit = '$new_img_name2', brand = '$brand', model = '$model', serial_no = '$serial_number', date_of_acquisition = '$date_of_acquisition', power_output = '$power_output', maximum_length_of_guidebar = '$maximum_length_of_guidebar', country_of_origin = '$country_of_origin', purchase_price = '$purchase_price', chainsaw_store = '$chainsaw_store', received_by = '$admin_username', date_and_time_submitted = '$date_and_time_submitted', status = '$status' " . "WHERE registration_id = $id";
-      $result = $conn->query($sql);
-
-      header("location: reg-stat-mon-for-submitted.php");
-    } else {
+    
+  if(!fileIsEmpty('chainsaw-official-receipt')) {    // there's a file uploaded
+    if(!fileIsImage('chainsaw-official-receipt')) {  // it is not a image
       $display_error = "You can't upload files of this type";
+      $no_error = false;
+    } else {
+      $can_upload_official_receipt = true;
     }
-  } else {
-    $display_error = "You can't upload files this type";
+  } else if (!fileIsEmpty('mayors-permit')){         // there's a file uploaded
+    if(!fileIsImage('mayors-permit')) {  // it is not a image
+      $display_error2 = "You can't upload files of this type";
+      $no_error = false;
+    } else {
+      $can_upload_mayors_permit = true;
+    }
   }
+
+  if($can_upload_official_receipt) { // there's a file uploaded
+    updateImage('chainsaw-official-receipt', $conn, 'registrations', 'chainsaw_receipt', '../uploads/', ['registration_id', $id]);
+  }
+  if($can_upload_mayors_permit) {   // there's a file uploaded
+    updateImage('mayors-permit', $conn, 'registrations', 'mayors_permit', '../uploads/', ['registration_id', $id]);
+  }
+
+  if($no_error) {
+    $sql = "UPDATE registrations " . "SET name = '$name', address = '$address', purpose = '$purpose', brand = '$brand', model = '$model', serial_no = '$serial_number', date_of_acquisition = '$date_of_acquisition', power_output = '$power_output', maximum_length_of_guidebar = '$maximum_length_of_guidebar', country_of_origin = '$country_of_origin', purchase_price = '$purchase_price', chainsaw_store = '$chainsaw_store', received_by = '$admin_username', date_and_time_submitted = '$date_and_time_submitted', status = '$status' " . "WHERE registration_id = $id";
+    $result = $conn->query($sql);
+
+    header("location: reg-stat-mon-for-submitted.php");
+  }
+
 }
 ?>
 
@@ -347,11 +237,14 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
 
         if (mysqli_num_rows($res) > 0) {
           while ($images = $res->fetch_assoc()) {
-            echo "
-                      <a style='height: 100px; width: 160px;' href='view-document.php?url=$images[chainsaw_receipt]'>
-                        <img style='height:100%; width:100%;' src='../uploads/$images[chainsaw_receipt]'>
-                      </a>
-                    ";
+            if($images['chainsaw_receipt'] != "") {
+              echo "
+              <a style='height: 100px; width: 160px;' href='view-document.php?url=$images[chainsaw_receipt]'>
+                <img style='height:100%; width:100%;' src='../uploads/$images[chainsaw_receipt]'>
+              </a>
+            ";
+            }
+
           }
         }
         ?>
@@ -366,7 +259,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
         }
         ?>
         <div class="d-flex flex-column">
-          <input type="file" class="form-control" for="input-chainsaw-receipt" name="chainsaw-official-receipt" required>
+          <input type="file" class="form-control" for="input-chainsaw-receipt" name="chainsaw-official-receipt">
         </div>
         <!-- mayor's permit -->
         <label class="form-label mt-2" for="upload-chainsaw-official-receipt">Change Mayor's Permit</label>
@@ -377,26 +270,29 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
 
         if (mysqli_num_rows($res) > 0) {
           while ($images = $res->fetch_assoc()) {
-            echo "
-                      <a style='height: 100px; width: 160px;' href='view-document.php?url=$images[mayors_permit]'>
-                        <img style='height:100%; width:100%;' src='../uploads/$images[mayors_permit]'>
-                      </a>
-                    ";
+            if($images['mayors_permit'] != "") {
+                  echo "
+              <a style='height: 100px; width: 160px;' href='view-document.php?url=$images[mayors_permit]'>
+                <img style='height:100%; width:100%;' src='../uploads/$images[mayors_permit]'>
+              </a>
+            ";
+            }
+
           }
         }
         ?>
 
         <?php
-        if (isset($display_error)) {
+        if (isset($display_error2)) {
           echo '
                 <div class="alert alert-danger" role="alert">
-                ' . $display_error . '
+                ' . $display_error2 . '
                 </div>
                 ';
         }
         ?>
         <div class="d-flex flex-column">
-          <input type="file" class="form-control" for="input-mayors-permit" name="mayors-permit" required>
+          <input type="file" class="form-control" for="input-mayors-permit" name="mayors-permit">
         </div>
       </div>
 
@@ -458,24 +354,6 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
 
   </div>
 
-  <!-- modal -->
-  <div class='modal fade' id='deleteModal' tabindex='-1' aria-labelledby='exampleModalLabel' aria-hidden='true'>
-    <div class='modal-dialog'>
-      <div class='modal-content'>
-        <div class='modal-header'>
-          <h1 class='modal-title fs-5' id='exampleModalLabel'>Warning!</h1>
-          <button type='button' class='btn-close' data-bs-dismiss='modal' aria-label='Close'></button>
-        </div>
-        <div class='modal-body'>
-          Are You Sure You Want to Log Out?<br>
-        </div>
-        <div class='modal-footer'>
-          <button type='button' class='btn btn-secondary' data-bs-dismiss='modal'>Cancel</button>
-          <a class='btn btn-danger' href='../../logout.php'>Log Out</a>
-        </div>
-      </div>
-    </div>
-  </div>
 </body>
 
 </html>

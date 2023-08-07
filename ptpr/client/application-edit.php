@@ -2,6 +2,8 @@
 
 @include "../../database/config.php";
 @include "../time.php";
+@include "../../upload-data.php";
+
 
 $url_status = "";
 
@@ -89,94 +91,45 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
 
   $id = $_GET["id"];
 
-  // insert chainsaw receipt URL to the database
-  $img_name1 = $_FILES['tax-declaration']['name'];
-  $img_size1 = $_FILES['tax-declaration']['size'];
-  $tmp_name1 = $_FILES['tax-declaration']['tmp_name'];
-  $error1 = $_FILES['tax-declaration']['error'];
+  
+  
 
-  // insert mayors permit URL to the database
-  $img_name2 = $_FILES['special-power-of-attorney']['name'];
-  $img_size2 = $_FILES['special-power-of-attorney']['size'];
-  $tmp_name2 = $_FILES['special-power-of-attorney']['tmp_name'];
-  $error2 = $_FILES['special-power-of-attorney']['error'];
+  
+  $can_upload_official_receipt = false;
+  $can_upload_mayors_permit = false;
+  $no_error = true;
 
-  if ($error1 === 0 && $error2 === 0) {
-    $img_ex1 = pathinfo($img_name1, PATHINFO_EXTENSION);
-    $img_ex_lc1 = strtolower($img_ex1);
-
-    $img_ex2 = pathinfo($img_name2, PATHINFO_EXTENSION);
-    $img_ex_lc2 = strtolower($img_ex2);
-
-    $allowed_exs = array("jpg", "jpeg", "png");
-
-    if (in_array($img_ex_lc1, $allowed_exs) && in_array($img_ex_lc2, $allowed_exs)) {
-      $new_img_name1 = uniqid("IMG-", true) . '.' . $img_ex_lc1;
-      $new_img_name2 = uniqid("IMG-", true) . '.' . $img_ex_lc2;
-
-      $img_upload_path1 = '../uploads/' . $new_img_name1;
-      $img_upload_path2 = '../uploads/' . $new_img_name2;
-
-      move_uploaded_file($tmp_name1, $img_upload_path1);
-      move_uploaded_file($tmp_name2, $img_upload_path2);
-
-      // execute the sql  query in the database
-      $select = "SELECT * FROM ptpr_registrations WHERE ptpr_registration_id = $id";
-      $check = $conn->query($select);
-
-
-
-      while ($row = $check->fetch_assoc()) {
-        unlink("../uploads/" . $row['tax_declaration']);
-        unlink("../uploads/" . $row['special_power_of_attorney']);
-      }
-
-      // get the minimum submission by an admin
-      // ----------------------------
-      $sql = "SELECT * FROM admins";
-      $admin_results = $conn->query($sql);
-
-      if (!$admin_results) {
-        die("Invalid query: " . $conn->error);
-      }
-
-      while ($row = $admin_results->fetch_assoc()) {
-        array_push($admins_no_of_submissions, $row['number_of_submissions']);
-        array_push($admins_id, $row['id']);
-      }
-
-
-      $mins = array_keys($admins_no_of_submissions, min($admins_no_of_submissions));
-      $lowest_admin_id = $admins_id[$mins[0]];
-
-
-      // ---------------------------
-
-      // get the admins id with the lowest submission
-
-      $check = "SELECT * FROM admins WHERE id = $lowest_admin_id";
-      $lowest_result = $conn->query($check);
-
-      if (!$lowest_result) {
-        die("Invalid Query: " . $conn->error);
-      }
-
-      while ($row = $lowest_result->fetch_assoc()) {
-        $admin_username = $row['username'];
-      }
-
-
-
-
-
-      $sql = "UPDATE ptpr_registrations " . "SET name = '$name', address = '$address', purpose = '$purpose', tax_declaration = '$new_img_name1', special_power_of_attorney = '$new_img_name2', tax_declaration_number = '$tax_declaration_number', barangay = '$barangay', municipality = '$municipality', province = '$province', total_lot_area = '$total_lot_area', area_devoted_to_plantation = '$area_devoted_to_plantation', species = '$species', number_of_trees = '$number_of_trees', date_and_time_updated = '$date_and_time_updated', received_by = '$admin_username' , status = '$status' " . "WHERE ptpr_registration_id = $id";
-      $result = $conn->query($sql);
-
-      header("location: reg-stat-mon-for-draft.php");
+    
+  if(!fileIsEmpty('tax-declaration')) {    // there's a file uploaded
+    if(!fileIsImage('tax-declaration')) {  // it is not a image
+      $display_error = "You can't upload files of this type";
+      $no_error = false;
     } else {
-      $dispaly_error = "You can't upload files of this type";
+      $can_upload_official_receipt = true;
+    }
+  } else if (!fileIsEmpty('special-power-of-attorney')){         // there's a file uploaded
+    if(!fileIsImage('special-power-of-attorney')) {  // it is not a image
+      $display_error2 = "You can't upload files of this type";
+      $no_error = false;
+    } else {
+      $can_upload_mayors_permit = true;
     }
   }
+
+  if($can_upload_official_receipt) { // there's a file uploaded
+    updateImage('tax-declaration', $conn, 'ptpr_registrations', 'tax_declaration', '../uploads/', ['ptpr_registration_id', $id]);
+  }
+  if($can_upload_mayors_permit) {   // there's a file uploaded
+    updateImage('special-power-of-attorney', $conn, 'ptpr_registrations', 'special_power_of_attorney', '../uploads/', ['ptpr_registration_id', $id]);
+  }
+
+  if($no_error) {
+    $sql = "UPDATE ptpr_registrations " . "SET name = '$name', address = '$address', purpose = '$purpose',  tax_declaration_number = '$tax_declaration_number', barangay = '$barangay', municipality = '$municipality', province = '$province', total_lot_area = '$total_lot_area', area_devoted_to_plantation = '$area_devoted_to_plantation', species = '$species', number_of_trees = '$number_of_trees', date_and_time_updated = '$date_and_time_updated', received_by = '$admin_username' , status = '$status' " . "WHERE ptpr_registration_id = $id";
+    $result = $conn->query($sql);
+
+    header("location: reg-stat-mon-for-draft.php");
+  }
+
 } else if (isset($_POST['submit'])) {
   $name = $_POST["name"];
   $address = $_POST["address"];
@@ -195,95 +148,43 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
 
   $id = $_GET["id"];
 
-  // insert chainsaw receipt URL to the database
-  $img_name1 = $_FILES['tax-declaration']['name'];
-  $img_size1 = $_FILES['tax-declaration']['size'];
-  $tmp_name1 = $_FILES['tax-declaration']['tmp_name'];
-  $error1 = $_FILES['tax-declaration']['error'];
 
-  // insert mayors permit URL to the database
-  $img_name2 = $_FILES['special-power-of-attorney']['name'];
-  $img_size2 = $_FILES['special-power-of-attorney']['size'];
-  $tmp_name2 = $_FILES['special-power-of-attorney']['tmp_name'];
-  $error2 = $_FILES['special-power-of-attorney']['error'];
+  
+  $can_upload_official_receipt = false;
+  $can_upload_mayors_permit = false;
+  $no_error = true;
 
-
-
-  if ($error1 === 0 && $error2 === 0) {
-    $img_ex1 = pathinfo($img_name1, PATHINFO_EXTENSION);
-    $img_ex_lc1 = strtolower($img_ex1);
-
-    $img_ex2 = pathinfo($img_name2, PATHINFO_EXTENSION);
-    $img_ex_lc2 = strtolower($img_ex2);
-
-    $allowed_exs = array("jpg", "jpeg", "png");
-
-    if (in_array($img_ex_lc1, $allowed_exs) && in_array($img_ex_lc2, $allowed_exs)) {
-      $new_img_name1 = uniqid("IMG-", true) . '.' . $img_ex_lc1;
-      $new_img_name2 = uniqid("IMG-", true) . '.' . $img_ex_lc2;
-
-      $img_upload_path1 = '../uploads/' . $new_img_name1;
-      $img_upload_path2 = '../uploads/' . $new_img_name2;
-
-      move_uploaded_file($tmp_name1, $img_upload_path1);
-      move_uploaded_file($tmp_name2, $img_upload_path2);
-
-      // execute the sql  query in the database
-      $select = "SELECT * FROM ptpr_registrations WHERE ptpr_registration_id = $id";
-      $check = $conn->query($select);
-
-
-
-      while ($row = $check->fetch_assoc()) {
-        unlink("../uploads/" . $row['tax_declaration']);
-        unlink("../uploads/" . $row['special_power_of_attorney']);
-      }
-
-      // get the minimum submission by an admin
-      // ----------------------------
-      $sql = "SELECT * FROM admins";
-      $admin_results = $conn->query($sql);
-
-      if (!$admin_results) {
-        die("Invalid query: " . $conn->error);
-      }
-
-      while ($row = $admin_results->fetch_assoc()) {
-        array_push($admins_no_of_submissions, $row['number_of_submissions']);
-        array_push($admins_id, $row['id']);
-      }
-
-
-      $mins = array_keys($admins_no_of_submissions, min($admins_no_of_submissions));
-      $lowest_admin_id = $admins_id[$mins[0]];
-
-
-      // ---------------------------
-
-      // get the admins id with the lowest submission
-
-      $check = "SELECT * FROM admins WHERE id = $lowest_admin_id";
-      $lowest_result = $conn->query($check);
-
-      if (!$lowest_result) {
-        die("Invalid Query: " . $conn->error);
-      }
-
-      while ($row = $lowest_result->fetch_assoc()) {
-        $admin_username = $row['username'];
-      }
-
-
-
-
-      $sql = "UPDATE ptpr_registrations " . "SET name = '$name', address = '$address', purpose = '$purpose', tax_declaration = '$new_img_name1', special_power_of_attorney = '$new_img_name2', tax_declaration_number = '$tax_declaration_number', barangay = '$barangay', municipality = '$municipality', province = '$province', total_lot_area = '$total_lot_area', area_devoted_to_plantation = '$area_devoted_to_plantation', species = '$species', number_of_trees = '$number_of_trees', date_and_time_submitted = '$date_and_time_submitted', received_by = '$admin_username', status = '$status' " . "WHERE ptpr_registration_id = $id";
-      $result = $conn->query($sql);
-
-      header("location: reg-stat-mon-for-submitted.php");
-    } else {
+    
+  if(!fileIsEmpty('tax-declaration')) {    // there's a file uploaded
+    if(!fileIsImage('tax-declaration')) {  // it is not a image
       $display_error = "You can't upload files of this type";
+      $no_error = false;
+    } else {
+      $can_upload_official_receipt = true;
+    }
+  } else if (!fileIsEmpty('special-power-of-attorney')){         // there's a file uploaded
+    if(!fileIsImage('special-power-of-attorney')) {  // it is not a image
+      $display_error2 = "You can't upload files of this type";
+      $no_error = false;
+    } else {
+      $can_upload_mayors_permit = true;
     }
   }
+
+  if($can_upload_official_receipt) { // there's a file uploaded
+    updateImage('tax-declaration', $conn, 'ptpr_registrations', 'tax_declaration', '../uploads/', ['ptpr_registration_id', $id]);
+  }
+  if($can_upload_mayors_permit) {   // there's a file uploaded
+    updateImage('special-power-of-attorney', $conn, 'ptpr_registrations', 'special_power_of_attorney', '../uploads/', ['ptpr_registration_id', $id]);
+  }
+
+  if($no_error) {
+    $sql = "UPDATE ptpr_registrations " . "SET name = '$name', address = '$address', purpose = '$purpose',  tax_declaration_number = '$tax_declaration_number', barangay = '$barangay', municipality = '$municipality', province = '$province', total_lot_area = '$total_lot_area', area_devoted_to_plantation = '$area_devoted_to_plantation', species = '$species', number_of_trees = '$number_of_trees', date_and_time_submitted = '$date_and_time_submitted', received_by = '$admin_username', status = '$status' " . "WHERE ptpr_registration_id = $id";
+    $result = $conn->query($sql);
+
+    header("location: reg-stat-mon-for-submitted.php");
+  }
+
 }
 ?>
 
@@ -358,7 +259,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
         }
         ?>
         <div class="d-flex flex-column">
-          <input type="file" class="form-control" name="tax-declaration" required>
+          <input type="file" class="form-control" name="tax-declaration">
         </div>
         <!-- mayor's permit -->
         <label class="form-label mt-2">Upload Special Power of Attorney</label>
@@ -387,7 +288,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
         }
         ?>
         <div class="d-flex flex-column">
-          <input type="file" class="form-control" name="special-power-of-attorney" required>
+          <input type="file" class="form-control" name="special-power-of-attorney">
         </div>
       </div>
 

@@ -1,5 +1,7 @@
 <?php
 @include "../../database/config.php";
+@include "../../check-expiration.php";
+
 session_start();
 
 // checks if the user is an ordinary user

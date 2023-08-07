@@ -2,6 +2,8 @@
 
 @include "../../database/config.php";
 @include "../time.php";
+@include "../../upload-data.php";
+
 
 $url_status = "";
 
@@ -94,94 +96,43 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
 
   $id = $_GET["id"];
 
-  // insert chainsaw receipt URL to the database
-  $img_name1 = $_FILES['pltp']['name'];
-  $img_size1 = $_FILES['pltp']['size'];
-  $tmp_name1 = $_FILES['pltp']['tmp_name'];
-  $error1 = $_FILES['pltp']['error'];
+  
+  $can_upload_official_receipt = false;
+  $can_upload_mayors_permit = false;
+  $no_error = true;
 
-  // insert mayors permit URL to the database
-  $img_name2 = $_FILES['vehicle-information']['name'];
-  $img_size2 = $_FILES['vehicle-information']['size'];
-  $tmp_name2 = $_FILES['vehicle-information']['tmp_name'];
-  $error2 = $_FILES['vehicle-information']['error'];
-
-  if ($error1 === 0 && $error2 === 0) {
-    $img_ex1 = pathinfo($img_name1, PATHINFO_EXTENSION);
-    $img_ex_lc1 = strtolower($img_ex1);
-
-    $img_ex2 = pathinfo($img_name2, PATHINFO_EXTENSION);
-    $img_ex_lc2 = strtolower($img_ex2);
-
-    $allowed_exs = array("jpg", "jpeg", "png");
-
-    if (in_array($img_ex_lc1, $allowed_exs) && in_array($img_ex_lc2, $allowed_exs)) {
-      $new_img_name1 = uniqid("IMG-", true) . '.' . $img_ex_lc1;
-      $new_img_name2 = uniqid("IMG-", true) . '.' . $img_ex_lc2;
-
-      $img_upload_path1 = '../uploads/' . $new_img_name1;
-      $img_upload_path2 = '../uploads/' . $new_img_name2;
-
-      move_uploaded_file($tmp_name1, $img_upload_path1);
-      move_uploaded_file($tmp_name2, $img_upload_path2);
-
-      // execute the sql  query in the database
-      $select = "SELECT * FROM cov_registrations WHERE cov_registration_id = $id";
-      $check = $conn->query($select);
-
-
-
-      while ($row = $check->fetch_assoc()) {
-        unlink("../uploads/" . $row['pltp']);
-        unlink("../uploads/" . $row['vehicle_information']);
-      }
-
-      // get the minimum submission by an admin
-      // ----------------------------
-      $sql = "SELECT * FROM admins";
-      $admin_results = $conn->query($sql);
-
-      if (!$admin_results) {
-        die("Invalid query: " . $conn->error);
-      }
-
-      while ($row = $admin_results->fetch_assoc()) {
-        array_push($admins_no_of_submissions, $row['number_of_submissions']);
-        array_push($admins_id, $row['id']);
-      }
-
-
-      $mins = array_keys($admins_no_of_submissions, min($admins_no_of_submissions));
-      $lowest_admin_id = $admins_id[$mins[0]];
-
-
-      // ---------------------------
-
-      // get the admins id with the lowest submission
-
-      $check = "SELECT * FROM admins WHERE id = $lowest_admin_id";
-      $lowest_result = $conn->query($check);
-
-      if (!$lowest_result) {
-        die("Invalid Query: " . $conn->error);
-      }
-
-      while ($row = $lowest_result->fetch_assoc()) {
-        $admin_username = $row['username'];
-      }
-
-
-
-
-
-      $sql = "UPDATE cov_registrations " . "SET name = '$name', address = '$address', purpose = '$purpose', pltp = '$new_img_name1', vehicle_information = '$new_img_name2', location_from = '$location_from', location_to = '$location_to', species = '$species', number_of_trees = '$number_of_trees', gross_volume = '$gross_volume', net_volume = '$net_volume', drivers_name = '$drivers_name', or_number = '$or_number', plate_number = '$plate_number', received_by = '$admin_username', status = '$status' " . "WHERE cov_registration_id = $id";
-      $result = $conn->query($sql);
-
-      header("location: reg-stat-mon-for-draft.php");
-    } else {
+    
+  if(!fileIsEmpty('pltp')) {    // there's a file uploaded
+    if(!fileIsImage('pltp')) {  // it is not a image
       $display_error = "You can't upload files of this type";
+      $no_error = false;
+    } else {
+      $can_upload_official_receipt = true;
+    }
+  } else if (!fileIsEmpty('vehicle-information')){         // there's a file uploaded
+    if(!fileIsImage('vehicle-information')) {  // it is not a image
+      $display_error2 = "You can't upload files of this type";
+      $no_error = false;
+    } else {
+      $can_upload_mayors_permit = true;
     }
   }
+
+  if($can_upload_official_receipt) { // there's a file uploaded
+    updateImage('pltp', $conn, 'cov_registrations', 'pltp', '../uploads/', ['cov_registration_id', $id]);
+  }
+  if($can_upload_mayors_permit) {   // there's a file uploaded
+    updateImage('vehicle-information', $conn, 'cov_registrations', 'vehicle_information', '../uploads/', ['cov_registration_id', $id]);
+  }
+
+  if($no_error) {
+    $sql = "UPDATE cov_registrations " . "SET name = '$name', address = '$address', purpose = '$purpose', location_from = '$location_from', location_to = '$location_to', species = '$species', number_of_trees = '$number_of_trees', gross_volume = '$gross_volume', net_volume = '$net_volume', drivers_name = '$drivers_name', or_number = '$or_number', plate_number = '$plate_number', received_by = '$admin_username', status = '$status' " . "WHERE cov_registration_id = $id";
+    $result = $conn->query($sql);
+
+    header("location: reg-stat-mon-for-draft.php");
+  }
+
+
 } else if (isset($_POST['submit'])) {
   $name = $_POST["name"];
   $address = $_POST["address"];
@@ -201,95 +152,43 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
 
   $id = $_GET["id"];
 
-  // insert chainsaw receipt URL to the database
-  $img_name1 = $_FILES['pltp']['name'];
-  $img_size1 = $_FILES['pltp']['size'];
-  $tmp_name1 = $_FILES['pltp']['tmp_name'];
-  $error1 = $_FILES['pltp']['error'];
 
-  // insert mayors permit URL to the database
-  $img_name2 = $_FILES['vehicle-information']['name'];
-  $img_size2 = $_FILES['vehicle-information']['size'];
-  $tmp_name2 = $_FILES['vehicle-information']['tmp_name'];
-  $error2 = $_FILES['vehicle-information']['error'];
+  
+  $can_upload_official_receipt = false;
+  $can_upload_mayors_permit = false;
+  $no_error = true;
 
-
-
-  if ($error1 === 0 && $error2 === 0) {
-    $img_ex1 = pathinfo($img_name1, PATHINFO_EXTENSION);
-    $img_ex_lc1 = strtolower($img_ex1);
-
-    $img_ex2 = pathinfo($img_name2, PATHINFO_EXTENSION);
-    $img_ex_lc2 = strtolower($img_ex2);
-
-    $allowed_exs = array("jpg", "jpeg", "png");
-
-    if (in_array($img_ex_lc1, $allowed_exs) && in_array($img_ex_lc2, $allowed_exs)) {
-      $new_img_name1 = uniqid("IMG-", true) . '.' . $img_ex_lc1;
-      $new_img_name2 = uniqid("IMG-", true) . '.' . $img_ex_lc2;
-
-      $img_upload_path1 = '../uploads/' . $new_img_name1;
-      $img_upload_path2 = '../uploads/' . $new_img_name2;
-
-      move_uploaded_file($tmp_name1, $img_upload_path1);
-      move_uploaded_file($tmp_name2, $img_upload_path2);
-
-      // execute the sql  query in the database
-      $select = "SELECT * FROM cov_registrations WHERE cov_registration_id = $id";
-      $check = $conn->query($select);
-
-
-
-      while ($row = $check->fetch_assoc()) {
-        unlink("../uploads/" . $row['pltp']);
-        unlink("../uploads/" . $row['vehicle_information']);
-      }
-
-      // get the minimum submission by an admin
-      // ----------------------------
-      $sql = "SELECT * FROM admins";
-      $admin_results = $conn->query($sql);
-
-      if (!$admin_results) {
-        die("Invalid query: " . $conn->error);
-      }
-
-      while ($row = $admin_results->fetch_assoc()) {
-        array_push($admins_no_of_submissions, $row['number_of_submissions']);
-        array_push($admins_id, $row['id']);
-      }
-
-
-      $mins = array_keys($admins_no_of_submissions, min($admins_no_of_submissions));
-      $lowest_admin_id = $admins_id[$mins[0]];
-
-
-      // ---------------------------
-
-      // get the admins id with the lowest submission
-
-      $check = "SELECT * FROM admins WHERE id = $lowest_admin_id";
-      $lowest_result = $conn->query($check);
-
-      if (!$lowest_result) {
-        die("Invalid Query: " . $conn->error);
-      }
-
-      while ($row = $lowest_result->fetch_assoc()) {
-        $admin_username = $row['username'];
-      }
-
-
-
-
-      $sql = "UPDATE cov_registrations " . "SET name = '$name', address = '$address', purpose = '$purpose', pltp = '$new_img_name1', vehicle_information = '$new_img_name2', location_from = '$location_from', location_to = '$location_to', species = '$species', number_of_trees = '$number_of_trees', gross_volume = '$gross_volume', net_volume = '$net_volume', drivers_name = '$drivers_name', or_number = '$or_number', plate_number = '$plate_number',  received_by = '$admin_username', date_and_time_submitted = '$date_and_time_submitted', status = '$status' " . "WHERE cov_registration_id = $id";
-      $result = $conn->query($sql);
-
-      header("location: reg-stat-mon-for-submitted.php");
-    } else {
+    
+  if(!fileIsEmpty('pltp')) {    // there's a file uploaded
+    if(!fileIsImage('pltp')) {  // it is not a image
       $display_error = "You can't upload files of this type";
+      $no_error = false;
+    } else {
+      $can_upload_official_receipt = true;
+    }
+  } else if (!fileIsEmpty('vehicle-information')){         // there's a file uploaded
+    if(!fileIsImage('vehicle-information')) {  // it is not a image
+      $display_error2 = "You can't upload files of this type";
+      $no_error = false;
+    } else {
+      $can_upload_mayors_permit = true;
     }
   }
+
+  if($can_upload_official_receipt) { // there's a file uploaded
+    updateImage('pltp', $conn, 'cov_registrations', 'pltp', '../uploads/', ['cov_registration_id', $id]);
+  }
+  if($can_upload_mayors_permit) {   // there's a file uploaded
+    updateImage('vehicle-information', $conn, 'cov_registrations', 'vehicle_information', '../uploads/', ['cov_registration_id', $id]);
+  }
+
+  if($no_error) {
+    $sql = "UPDATE cov_registrations " . "SET name = '$name', address = '$address', purpose = '$purpose', location_from = '$location_from', location_to = '$location_to', species = '$species', number_of_trees = '$number_of_trees', gross_volume = '$gross_volume', net_volume = '$net_volume', drivers_name = '$drivers_name', or_number = '$or_number', plate_number = '$plate_number',  received_by = '$admin_username', date_and_time_submitted = '$date_and_time_submitted', status = '$status' " . "WHERE cov_registration_id = $id";
+    $result = $conn->query($sql);
+
+    header("location: reg-stat-mon-for-submitted.php");
+  }
+
 }
 ?>
 
@@ -364,7 +263,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
         }
         ?>
         <div class="d-flex flex-column">
-          <input type="file" class="form-control" for="input-chainsaw-receipt" name="pltp" required>
+          <input type="file" class="form-control" for="input-chainsaw-receipt" name="pltp">
         </div>
         <!-- mayor's permit -->
         <label class="form-label mt-2" for="upload-chainsaw-official-receipt">Vehicle Information</label>
@@ -385,7 +284,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
         ?>
 
         <?php
-        if (isset($display_error)) {
+        if (isset($display_error2)) {
           echo '
                 <div class="alert alert-danger" role="alert">
                 ' . $display_error . '
@@ -394,7 +293,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
         }
         ?>
         <div class="d-flex flex-column">
-          <input type="file" class="form-control" for="input-mayors-permit" name="vehicle-information" required>
+          <input type="file" class="form-control" for="input-mayors-permit" name="vehicle-information">
         </div>
       </div>
 
