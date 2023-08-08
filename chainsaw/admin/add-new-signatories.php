@@ -11,6 +11,7 @@ if (isset($_POST['submit'])) {
   $address = mysqli_real_escape_string($conn, $_POST['address']);
   $email_address = mysqli_real_escape_string($conn, $_POST['email-address']);
   $sex = mysqli_real_escape_string($conn, $_POST['sex']);
+  $type_of_user = mysqli_real_escape_string($conn, $_POST['type-of-user']);
   $password = md5($_POST['password']);
   $confirm_password = md5($_POST['confirm-password']);
 
@@ -24,7 +25,7 @@ if (isset($_POST['submit'])) {
       // if there is a data retrieve, display an error prompting the user that this email and password already exist
       $error = 'user already exist!';
     } else {
-      $insert = "INSERT INTO signatories (username, first_name, last_name, address, email_address, sex, status, password) " . "VALUES ('$username', '$first_name', '$last_name', '$address', '$email_address', '$sex', 'activated', '$password')";
+      $insert = "INSERT INTO signatories (username, first_name, last_name, address, email_address, sex, type_of_user, status, password) " . "VALUES ('$username', '$first_name', '$last_name', '$address', '$email_address', '$sex', '$type_of_user', 'activated', '$password')";
       $result = $conn->query($insert);
 
       header('location: crude-signatories.php');
@@ -96,6 +97,13 @@ if (isset($_POST['submit'])) {
     <select class="form-select" name="sex">
       <option value="male">Male</option>
       <option value="female">Female</option>
+    </select>
+
+    <label class="form-label" for="type-of-user">Type of User</label>
+    <select class="form-select" name="type-of-user">
+      <option value="order of payment signatories">Order of Payment Signatories</option>
+      <option value="permit signatories">Permit Signatories</option>
+      <option value="issuing and releasing personnel">Issuing and Releasing Personnel</option>
     </select>
 
     <?php 

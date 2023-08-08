@@ -43,7 +43,6 @@ if(!isset($_SESSION['admin_username'])){
         <ul>
         <li onclick="location.href='../../forestry-services-homepage-admin.php'">Home</li>
             <li  class="bg-dark-gray2" onclick="location.href='crude-clients.php'">List of Users</li>
-            <li onclick="location.href='chainsaw-stores.php'">List of Chainsaw Stores</li>
             <li onclick="location.href='updating-of-application-form.php'">Accept Client Applications</li>
           <li onclick="location.href='list-of-applications.php'">Generate Applications</li>
           <li onclick="location.href='release-applications.php'">Released Applications</li>
@@ -53,7 +52,7 @@ if(!isset($_SESSION['admin_username'])){
     <div class="content border border-primary">
       <div class="content-container">
         <div class="content-header">
-        <h4>Chainsaw > <span class="fs-5">List of Signatories</span></h4>
+        <h4>PTPR > <span class="fs-5">List of Signatories</span></h4>
         </div>
 
         <nav class="status-list-nav">
@@ -78,6 +77,7 @@ if(!isset($_SESSION['admin_username'])){
                 <th>Address</th>
                 <th>Email Address</th>
                 <th>Sex</th>
+                <th>Type of User</th>
                 <th>Status</th>
                 <th>Action</th>
               </tr>
@@ -109,6 +109,7 @@ if(!isset($_SESSION['admin_username'])){
             <td>$row[address]</td>
             <td>$row[email_address]</td>
             <td>$row[sex]</td>
+            <td>$row[type_of_user]</td>
             <td>$row[status]</td>
             <td>
               <a class='btn btn-primary btn-sm mb-1' href='edit-signatories.php?id=$row[signatories_id]'>Edit</a>

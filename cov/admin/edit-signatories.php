@@ -8,6 +8,7 @@
   $address = "";
   $email_address = "";
   $sex = "";
+  $type_of_user = "";
 
   $errorMessage = "";
   $successMessage = "";
@@ -36,6 +37,7 @@
     $address = $row['address'];
     $email_address = $row['email_address'];
     $sex = $row['sex'];
+    $type_of_user = $row['type_of_user'];
   
   }else {
 
@@ -48,8 +50,10 @@
     $address = mysqli_escape_string($conn, $_POST['address']);
     $email_address = mysqli_escape_string($conn, $_POST['email-address']);
     $sex = mysqli_escape_string($conn, $_POST['sex']);
+    $type_of_user = mysqli_escape_string($conn, $_POST['type-of-user']);
 
-    $sql = "UPDATE signatories SET username = '$username', first_name = '$first_name', last_name = '$last_name', address = '$address', email_address = '$email_address', sex = '$sex' WHERE signatories.signatories_id = $id";
+
+    $sql = "UPDATE signatories SET username = '$username', first_name = '$first_name', last_name = '$last_name', address = '$address', email_address = '$email_address', sex = '$sex', type_of_user = '$type_of_user' WHERE signatories.signatories_id = $id";
     $result = $conn->query($sql);
 
     if(!$result) {
@@ -135,6 +139,20 @@
           </select>
         </div>
       </div>
+
+      
+      <div class="row mb-3">
+        <label class="col-sm-3 col-form-label" for="type-of-user">Type of User</label>
+        <div class="col-sm-6">
+          <select class="form-select" name="type-of-user">
+            <option value="order of payment signatories">Order of Payment Signatories</option>
+            <option value="permit signatories">Permit Signatories</option>
+            <option value="issuing and releasing personnel">Issuing and Releasing Personnel</option>
+          </select>
+        </div>
+      </div>
+
+
 
 
       <?php

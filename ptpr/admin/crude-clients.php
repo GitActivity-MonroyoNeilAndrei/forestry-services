@@ -53,7 +53,7 @@ if (!isset($_SESSION['admin_username'])) {
       <div class="content border border-primary">
         <div class="content-container">
           <div class="content-header">
-            <h4>COV > <span class="fs-5">List of Clients</span></h4>
+            <h4>PTPR > <span class="fs-5">List of Clients</span></h4>
           </div>
 
           <nav class="status-list-nav">

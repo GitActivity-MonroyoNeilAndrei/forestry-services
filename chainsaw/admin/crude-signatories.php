@@ -78,6 +78,7 @@ if(!isset($_SESSION['admin_username'])){
                 <th>Address</th>
                 <th>Email Address</th>
                 <th>Sex</th>
+                <th>Type of User</th>
                 <th>Status</th>
                 <th>Action</th>
               </tr>
@@ -109,6 +110,7 @@ if(!isset($_SESSION['admin_username'])){
             <td>$row[address]</td>
             <td>$row[email_address]</td>
             <td>$row[sex]</td>
+            <td>$row[type_of_user]</td>
             <td>$row[status]</td>
             <td>
               <a class='btn btn-primary btn-sm mb-1' href='edit-signatories.php?id=$row[signatories_id]'>Edit</a>
