@@ -146,7 +146,7 @@ date_default_timezone_set('Asia/Manila');
       <p>***Not valid w/o PENRO Official Seal***</p><br>
 
 
-      <p style="text-align: center; line-height: 2px;">Capitol Compound, Barangay, Bangbangaln, Boac, Marinduque</p>
+      <p style="text-align: center; line-height: 2px;">Capitol Compound, Barangay, Bangbangalon, Boac, Marinduque</p>
       <p style="text-align: center; line-height: 2px;">Telephone Nos: (042) 332-1490(042) 332-0727(042) 332-1913</p>
       <p style="text-align: center; line-height: 2px;">Wesbite: https://penromarinduque.gov.ph/</p>
       <p style="text-align: center; line-height: 2px;">Email: penromarinduque@denr.gov.ph</p>

@@ -93,7 +93,7 @@ if(!isset($_SESSION['username'])){
               while($row = $result->fetch_assoc()){
                 echo "
                   <tr>
-                    <td>$row[registration_number]</td>
+                    <td>$row[registration_number]$row[registration_id]</td>
                     <td class='px-3'>$row[date_and_time_encoded]</td>
                     <td class='px-3'>$row[received_by]</td>
                     <td class='px-3'>$row[date_and_time_updated]</td>

@@ -43,7 +43,7 @@ if (!isset($_SESSION['admin_username'])) {
         <nav>
           <ul>
             <li onclick="location.href='../../forestry-services-homepage-admin.php'">Home</li>
-            <li class="bg-dark-gray2" onclick="location.href='crude-clients.php'">List of Clients</li>
+            <li class="bg-dark-gray2" onclick="location.href='crude-clients.php'">List of Users</li>
             <li onclick="location.href='updating-of-application-form.php'">Accept Client Applications</li>
             <li onclick="location.href='list-of-applications.php'">Generate Applications</li>
             <li onclick="location.href='release-applications.php'">Released Applications</li>
@@ -93,7 +93,7 @@ if (!isset($_SESSION['admin_username'])) {
                 }
 
                 // execute the sql  query in the database
-                $select = "SELECT * FROM clients";
+                $select = "SELECT * FROM clients ORDER BY client_id DESC";
                 $result = $conn->query($select);
 
                 // display error, if there's any
