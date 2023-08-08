@@ -15,24 +15,28 @@ if (isset($_POST['submit'])) {
   $username = mysqli_real_escape_string($conn, $_POST['admin_username']);
   $business_name = mysqli_real_escape_string($conn, $_POST['business-name']);
   $owners_name = mysqli_real_escape_string($conn, $_POST['owners-name']);
+  $sex = mysqli_real_escape_string($conn, $_POST['sex']);
   $address = mysqli_real_escape_string($conn, $_POST['address']);
   $contact_number = mysqli_real_escape_string($conn, $_POST['contact-number']);
   $email_address = mysqli_real_escape_string($conn, $_POST['email-address']);
   $password = md5($_POST['password']);
-  $confirm_password = md5($_POST['password']);
+  $confirm_password = md5($_POST['confirm-password']);
 
-
-  $select = " SELECT * FROM clients WHERE username = '$username' && email_address = '$email_address' && password = '$password'";
-  $check = $conn->query($select);
-
-  if (mysqli_num_rows($check) > 0) {
-    // if there is a data retrieve, display an error prompting the user that this email and password already exist
-    $error = 'user already exist!';
+  if ($password != $confirm_password) {
+    $password_error = "password doesn't match";
   } else {
-    $insert = "INSERT INTO clients (username, business_name, owners_name, address, contact_number, email_address, password) " . "VALUES ('$username', '$business_name', '$owners_name', '$address', '$contact_number', '$email_address', '$password')";
-    $result = $conn->query($insert);
+    $select = " SELECT * FROM clients WHERE username = '$username' && email_address = '$email_address' && password = '$password'";
+    $check = $conn->query($select);
 
-    header('location: crude-clients.php');
+    if (mysqli_num_rows($check) > 0) {
+      // if there is a data retrieve, display an error prompting the user that this email and password already exist
+      $error = 'user already exist!';
+    } else {
+      $insert = "INSERT INTO clients (username, business_name, owners_name, sex, address, contact_number, email_address, password) " . "VALUES ('$username', '$business_name', '$owners_name', '$sex', '$address', '$contact_number', '$email_address', '$password')";
+      $result = $conn->query($insert);
+
+      header('location: crude-clients.php');
+    }
   }
 }
 ?>
@@ -86,6 +90,12 @@ if (isset($_POST['submit'])) {
       <input class="form-control" type="text" name="owners-name" required>
     </div>
 
+    <label class="form-label" for="sex">Sex</label>
+    <select class="form-select" name="sex">
+      <option value="male">Male</option>
+      <option value="female">Female</option>
+    </select>
+
     <div class="form-group">
       <label class="form-label" for="address">Address</label>
       <input class="form-control" type="text" name="address" required>
@@ -100,6 +110,18 @@ if (isset($_POST['submit'])) {
       <label class="form-label" for="email-address">Email Address</label>
       <input class="form-control" type="text" name="email-address" required>
     </div>
+
+    <?php
+
+    if (isset($password_error)) {
+      echo '
+        <div class="alert alert-danger" role="alert">
+          ' . $password_error . '
+        </div> ';
+    }
+
+
+    ?>
 
     <div class="form-group">
       <label class="form-label" for="password">Password</label>
